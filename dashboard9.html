@@ -1,0 +1,2419 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KidneyCare Super Specialty Hospital & Institute - Enterprise HIS/BI Suite</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            900: '#134e4a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gauge-circle {
+            transition: stroke-dashoffset 0.8s ease-in-out;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        .clickable-card {
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .clickable-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .modal-backdrop {
+            background-color: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+        }
+        .chat-glow {
+            box-shadow: 0 0 20px rgba(13, 148, 136, 0.35);
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 35s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 antialiased transition-colors duration-200">
+
+    <!-- 1. ENTERPRISE LOGIN PORTAL OVERLAY -->
+    <div id="loginPortal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 text-white p-4">
+        <div class="bg-slate-800/90 border border-slate-700 rounded-2xl shadow-2xl p-8 max-w-md w-full relative overflow-hidden backdrop-blur-md">
+            <div class="text-center mb-6">
+                <div class="inline-flex p-3 bg-teal-600 rounded-2xl text-white shadow-lg shadow-teal-500/30 mb-3">
+                    <i data-lucide="activity" class="w-8 h-8"></i>
+                </div>
+                <h2 class="text-xl font-bold tracking-tight text-white">KidneyCare Super Specialty Hospital</h2>
+                <p class="text-xs text-teal-400 font-semibold uppercase tracking-wider mt-1">Enterprise Executive Decision Support Suite</p>
+            </div>
+
+            <form onsubmit="handlePortalLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Select Executive Role</label>
+                    <select id="loginRole" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-teal-500 font-medium cursor-pointer">
+                        <option value="Administrator">Administrator (Full System Access)</option>
+                        <option value="CEO">CEO (Chief Executive Officer)</option>
+                        <option value="CFO" selected>CFO (Chief Financial Officer)</option>
+                        <option value="Medical Director">Medical Director (Clinical Operations)</option>
+                        <option value="Finance Manager">Finance Manager (RCM & Budget)</option>
+                        <option value="Quality Head">Quality Head (NABH & Compliance)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Username / HIS ID</label>
+                    <input type="text" value="exec.cfo@kidneycare.org" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-teal-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Secure Password</label>
+                    <input type="password" value="••••••••••••" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-teal-500">
+                </div>
+
+                <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                    <label class="flex items-center cursor-pointer">
+                        <input type="checkbox" checked class="rounded border-slate-700 text-teal-600 focus:ring-teal-500 mr-1.5">
+                        <span>Remember Credential</span>
+                    </label>
+                    <a href="#" onclick="alert('Password reset link sent to registered administrator email.')" class="hover:text-teal-400 transition">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-bold text-xs rounded-lg shadow-lg shadow-teal-600/30 transition transform active:scale-95 flex items-center justify-center space-x-2">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    <span>Authenticate & Launch HIS</span>
+                </button>
+            </form>
+
+            <div class="mt-6 pt-4 border-t border-slate-700/60 text-center text-[10px] text-slate-400">
+                <span>NABH & HIPAA Compliant Healthcare Information System v4.8</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. LOGIN LOADING PROGRESS SCREEN OVERLAY -->
+    <div id="loginLoadingScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950 text-white p-4 hidden">
+        <div class="text-center space-y-4 max-w-sm w-full">
+            <div class="inline-flex p-3 bg-teal-600/20 text-teal-400 rounded-full border border-teal-500/30 animate-pulse">
+                <i data-lucide="server" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-sm font-bold text-white tracking-wide" id="loginLoadingMsg">Connecting to Hospital Information System...</h3>
+            <p class="text-xs text-slate-400" id="loginLoadingSubMsg">Authenticating role credentials & decrypting revenue ledgers</p>
+
+            <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700">
+                <div id="loginProgressBar" class="bg-gradient-to-r from-teal-500 to-emerald-400 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <span class="text-[10px] font-mono text-teal-400 block" id="loginProgressPct">0%</span>
+        </div>
+    </div>
+
+    <!-- GENERAL MODAL LOADING OVERLAY -->
+    <div id="generalLoadingOverlay" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden">
+        <div class="bg-slate-900 text-white p-5 rounded-xl border border-slate-800 shadow-2xl flex items-center space-x-3">
+            <div class="w-5 h-5 border-2 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-xs font-semibold" id="generalLoadingText">Loading Hospital Analytics...</span>
+        </div>
+    </div>
+
+    <!-- LIVE HOSPITAL SCROLLING ACTIVITY TICKER BAR -->
+    <div class="bg-slate-800 text-slate-200 border-b border-slate-700 text-[11px] py-1.5 px-4 overflow-hidden relative flex items-center">
+        <div class="flex items-center font-bold text-teal-400 mr-3 flex-shrink-0 z-10 bg-slate-800 pr-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping mr-1.5"></span>
+            <span>LIVE HIS ACTIVITY LOG:</span>
+        </div>
+        <div class="overflow-hidden w-full relative">
+            <div class="animate-marquee space-x-8 text-slate-300 font-mono">
+                <span><strong class="text-teal-400">09:42 PM</strong> PM-JAY Claim #78214 Approved (₹1.45 Lakh)</span>
+                <span><strong class="text-teal-400">09:38 PM</strong> RO Plant Ultra-Pure Water Backwash Completed</span>
+                <span><strong class="text-teal-400">09:31 PM</strong> Patient #PT-9042 Refund Processed (₹12,500)</span>
+                <span><strong class="text-teal-400">09:20 PM</strong> Dialysis Machine HD-M04 Maintenance Scheduled</span>
+                <span><strong class="text-teal-400">09:15 PM</strong> Transplant OT Consumable Stock Auto-Replenished</span>
+                <span><strong class="text-teal-400">09:00 PM</strong> Monthly Board Financial Briefing Package Generated</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                
+                <!-- Hospital Brand Logo & Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-teal-600 rounded-lg text-white shadow-md shadow-teal-600/30">
+                        <i data-lucide="activity" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-extrabold tracking-tight text-white flex items-center">
+                            KidneyCare Super Specialty Hospital & Institute
+                        </h1>
+                        <div class="flex items-center space-x-2 text-[11px]">
+                            <span class="text-teal-400 font-semibold uppercase tracking-wide">CFO Decision Support Suite</span>
+                            <span class="text-slate-600">|</span>
+                            <span id="navRoleBadge" class="bg-teal-900/80 text-teal-300 font-bold px-2 py-0.5 rounded border border-teal-700/50">Role: CFO</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HIS Global Search Bar -->
+                <div class="hidden md:flex flex-1 max-w-xs mx-4 relative" title="Global HIS Search (Shortcut: Ctrl + F)">
+                    <div class="relative w-full">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+                        <input type="text" id="hisSearchInput" onkeyup="handleHisSearch(event)" placeholder="Search Machine, Refund, Claim... (Ctrl+F)" class="w-full bg-slate-800 text-xs text-white placeholder-slate-400 pl-9 pr-4 py-2 rounded-lg border border-slate-700 focus:outline-none focus:border-teal-500 transition">
+                    </div>
+                    <div id="searchResultsDropdown" class="hidden absolute top-10 left-0 right-0 bg-white dark:bg-slate-900 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-800 z-50 max-h-80 overflow-y-auto text-slate-800 dark:text-slate-100 divide-y divide-slate-100 dark:divide-slate-800"></div>
+                </div>
+
+                <!-- Live Date & Clock Display -->
+                <div class="hidden xl:flex flex-col text-right text-[11px] font-mono text-slate-300 border-r border-slate-800 pr-4">
+                    <div><span id="liveDateText" class="text-slate-400">Loading Date...</span> | <strong id="liveTimeText" class="text-teal-400">00:00:00 AM</strong></div>
+                    <div class="text-[10px] text-slate-400">HIS Sync: <span class="text-emerald-400">Live (1s ago)</span></div>
+                </div>
+
+                <!-- Action Toolbar -->
+                <div class="flex items-center space-x-2">
+                    
+                    <!-- Scenario Simulator Button -->
+                    <button onclick="openScenarioSimulator()" class="flex items-center space-x-1 text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-1.5 px-2.5 rounded-lg border border-emerald-500 shadow-sm transition" title="Financial Sensitivity & Scenario Modeling">
+                        <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                        <span class="hidden lg:inline">Simulator</span>
+                    </button>
+
+                    <!-- Generate Executive Report Button -->
+                    <button onclick="openExecutiveReportGenerator()" class="flex items-center space-x-1 text-xs bg-teal-600 hover:bg-teal-500 text-white font-semibold py-1.5 px-2.5 rounded-lg border border-teal-500 shadow-sm transition" title="Compile & Generate Executive PDF Report">
+                        <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                        <span class="hidden lg:inline">Gen Report</span>
+                    </button>
+
+                    <!-- Auto Presentation Button -->
+                    <button onclick="togglePresentationMode()" id="presentationBtn" class="flex items-center space-x-1 text-xs bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-1.5 px-2.5 rounded-lg border border-cyan-500 transition" title="Auto-Play Presentation View (Shortcut: Ctrl + P)">
+                        <i data-lucide="play-circle" class="w-3.5 h-3.5"></i>
+                        <span class="hidden xl:inline">Auto-Play</span>
+                    </button>
+
+                    <!-- Board Meeting Mode -->
+                    <button onclick="openBoardMeetingMode()" class="flex items-center space-x-1 text-xs bg-amber-600 hover:bg-amber-500 text-white font-semibold py-1.5 px-2.5 rounded-lg border border-amber-500 transition" title="Full Screen Board Meeting Executive View">
+                        <i data-lucide="award" class="w-3.5 h-3.5"></i>
+                        <span class="hidden sm:inline">Board Pack</span>
+                    </button>
+
+                    <!-- Briefing -->
+                    <button onclick="openExecutiveBriefing()" class="flex items-center space-x-1 text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-1.5 px-2.5 rounded-lg border border-indigo-500 transition" title="Monthly Executive Briefing Narrative">
+                        <i data-lucide="presentation" class="w-3.5 h-3.5"></i>
+                        <span class="hidden sm:inline">Briefing</span>
+                    </button>
+
+                    <!-- Notification Bell -->
+                    <div class="relative" title="Clinical & Financial Notifications">
+                        <button onclick="toggleNotificationPanel()" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 relative transition">
+                            <i data-lucide="bell" class="w-4 h-4"></i>
+                            <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full animate-pulse"></span>
+                        </button>
+                        <div id="notificationPanel" class="hidden absolute right-0 top-11 w-80 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800 z-50 text-slate-800 dark:text-slate-100 overflow-hidden">
+                            <div class="bg-slate-900 text-white px-4 py-2.5 flex justify-between items-center text-xs font-bold border-b border-slate-800">
+                                <span class="flex items-center"><i data-lucide="bell-ring" class="w-3.5 h-3.5 mr-1.5 text-teal-400"></i> Clinical & RCM Notifications</span>
+                                <span id="notifCountBadge" class="bg-teal-600 text-white px-1.5 py-0.5 rounded text-[10px]">5 New</span>
+                            </div>
+                            <div id="notifList" class="divide-y divide-slate-100 dark:divide-slate-800 max-h-72 overflow-y-auto text-xs"></div>
+                        </div>
+                    </div>
+
+                    <!-- Dark Mode Toggle Switch -->
+                    <button onclick="toggleDarkMode()" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition" title="Toggle Light / Dark Theme">
+                        <i id="darkModeIcon" data-lucide="moon" class="w-4 h-4"></i>
+                    </button>
+
+                    <!-- Global Month Selector Filter -->
+                    <div class="flex items-center bg-white dark:bg-slate-900 rounded-lg px-2 py-1 border border-slate-300 dark:border-slate-700 shadow-sm" title="Global Month Filter (Shortcut: Arrow Keys)">
+                        <i data-lucide="calendar" class="w-4 h-4 text-teal-600 dark:text-teal-400 mr-1"></i>
+                        <select id="monthSelect" class="bg-transparent text-xs font-bold text-slate-900 dark:text-white focus:outline-none cursor-pointer">
+                        </select>
+                    </div>
+
+                    <!-- Relog Button -->
+                    <button onclick="showLoginPortal()" class="p-2 bg-rose-950/80 hover:bg-rose-900 text-rose-300 rounded-lg border border-rose-800 transition" title="Switch User Role / Logout">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- SYSTEM HEALTH & HIS ONLINE TELEMETRY PANEL -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-3.5 flex flex-wrap items-center justify-between gap-3 text-xs" id="sec-syshealth">
+            <div class="flex items-center space-x-2 border-r border-slate-200 dark:border-slate-800 pr-3">
+                <i data-lucide="server" class="w-4 h-4 text-teal-600 dark:text-teal-400"></i>
+                <span class="font-extrabold text-slate-900 dark:text-white uppercase tracking-wider text-[11px]">System Infrastructure Status:</span>
+            </div>
+            <div class="flex items-center space-x-4 flex-wrap gap-y-1 text-[11px]">
+                <div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> <span class="text-slate-500 dark:text-slate-400">HIS Core:</span> <strong class="text-emerald-600 dark:text-emerald-400">Online</strong></div>
+                <div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> <span class="text-slate-500 dark:text-slate-400">Finance Server:</span> <strong class="text-emerald-600 dark:text-emerald-400">Online</strong></div>
+                <div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> <span class="text-slate-500 dark:text-slate-400">RCM Engine:</span> <strong class="text-emerald-600 dark:text-emerald-400">Online</strong></div>
+                <div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> <span class="text-slate-500 dark:text-slate-400">PostgreSQL DB:</span> <strong class="text-emerald-600 dark:text-emerald-400">Online</strong></div>
+                <div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span> <span class="text-slate-500 dark:text-slate-400">AI Engine:</span> <strong class="text-cyan-600 dark:text-cyan-400">Running</strong></div>
+                <div class="flex items-center space-x-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> <span class="text-slate-500 dark:text-slate-400">Notifications:</span> <strong class="text-emerald-600 dark:text-emerald-400">Running</strong></div>
+            </div>
+        </div>
+
+        <!-- Live Hospital Operations Status Widget -->
+        <div class="bg-slate-900 text-white rounded-xl shadow-md p-4 border border-slate-800" id="sec-operations">
+            <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-teal-400">Live Hospital Operational Status</h3>
+                </div>
+                <span class="text-[10px] text-slate-400">Real-time HIS Telemetry Feed</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-5 md:grid-cols-10 gap-2 text-center text-xs">
+                <div class="p-2 bg-slate-800 rounded-lg border border-slate-700" title="Inpatient Beds Occupied vs Capacity"><span class="text-[9px] text-slate-400 block">Beds Occupied</span><span class="font-extrabold text-emerald-400">88 / 100</span></div>
+                <div class="p-2 bg-slate-800 rounded-lg border border-slate-700" title="Renal ICU Bed Occupancy"><span class="text-[9px] text-slate-400 block">ICU Occupancy</span><span class="font-extrabold text-amber-400">14 / 16</span></div>
+                <div class="p-2 bg-slate-800 rounded-lg border border-slate-700" title="Active Dialysis Chairs In-Use"><span class="text-[9px] text-slate-400 block">Chairs Occupied</span><span id="liveChairs" class="font-extrabold text-cyan-400">22 / 24</span></div>
+                <div class="p-2 bg-slate-800 rounded-lg border border-slate-700" title="Dialysis Machines Online"><span class="text-[9px] text-slate-400 block">Machines Active</span><span id="liveMachines" class="font-extrabold text-teal-400">22</span></div>
+                <div class="p-2 bg-slate-800 rounded-lg border border-slate-700" title="Acute Emergency Dialysis Sessions"><span class="text-[9px] text-slate-400 block">Emergency Cases</span><span class="font-extrabold text-rose-400">3 Cases</span></div>
+                <div class="p-2 bg-slate-800 rounded-lg border border-slate-700" title="On-Duty Consultant Nephrologists"><span class="text-[9px] text-slate-400 block">Nephrologists</span><span class="font-extrabold text-white">6 On Duty</span></div>
+                <div class="p-2 bg-slate-800 rounded-lg border border-slate-700" title="Dialysis Technicians"><span class="text-[9px] text-slate-400 block">Dialysis Techs</span><span class="font-extrabold text-white">14 Staff</span></div>
+                <div class="p-2 bg-slate-800 rounded-lg border border-slate-700" title="Floor Nursing Staff"><span class="text-[9px] text-slate-400 block">Nurses Active</span><span class="font-extrabold text-white">28 On Floor</span></div>
+                <div class="p-2 bg-slate-800 rounded-lg border border-slate-700" title="Surgical Operating Theatres"><span class="text-[9px] text-slate-400 block">OT Status</span><span class="font-extrabold text-emerald-400">2 OT Ready</span></div>
+                <div class="p-2 bg-slate-800 rounded-lg border border-slate-700" title="Blood Bank Reserve"><span class="text-[9px] text-slate-400 block">Blood Bank</span><span class="font-extrabold text-emerald-400">O-ve Adequate</span></div>
+            </div>
+        </div>
+
+        <!-- Executive Scorecard Section -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5" id="sec-scorecard">
+            <h3 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4 flex items-center">
+                Executive Multi-Domain Performance Scorecard
+            </h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 text-center">
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800" title="Composite Weighted Financial Score"><span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 block mb-1">Financial Health</span><span id="scFinancial" class="text-2xl font-black text-teal-600 dark:text-teal-400">90</span><span class="text-[9px] text-slate-400 block mt-0.5">Target: 85+</span></div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800" title="Bed & Chair Operational Efficiency"><span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 block mb-1">Operational</span><span id="scOperational" class="text-2xl font-black text-blue-600 dark:text-blue-400">88</span><span class="text-[9px] text-slate-400 block mt-0.5">Target: 80+</span></div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800" title="Revenue Cycle & Denial Management"><span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 block mb-1">RCM Efficiency</span><span id="scRcm" class="text-2xl font-black text-indigo-600 dark:text-indigo-400">92</span><span class="text-[9px] text-slate-400 block mt-0.5">Target: 85+</span></div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800" title="Infection Control & Clinical Care Standards"><span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 block mb-1">Clinical Quality</span><span id="scClinical" class="text-2xl font-black text-emerald-600 dark:text-emerald-400">94</span><span class="text-[9px] text-slate-400 block mt-0.5">Target: 90+</span></div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-800" title="Dialysis Machine Fleet Efficiency"><span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 block mb-1">Asset Utilization</span><span id="scAsset" class="text-2xl font-black text-cyan-600 dark:text-cyan-400">91</span><span class="text-[9px] text-slate-400 block mt-0.5">Target: 85+</span></div>
+                <div class="p-3 bg-slate-900 text-white rounded-xl border border-slate-800" title="Overall Composite Hospital Health"><span class="text-[10px] font-bold text-teal-400 block mb-1">Overall Hospital</span><span id="scOverall" class="text-2xl font-black text-amber-400">91</span><span class="text-[9px] text-slate-400 block mt-0.5">Composite Score</span></div>
+            </div>
+        </div>
+
+        <!-- Executive Overview & AI Advisor Banner -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6" id="sec-overview">
+            
+            <!-- Financial Health Score Card (Gauge) -->
+            <div onclick="openHealthScoreConsole()" class="clickable-card lg:col-span-4 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5 flex flex-col justify-between" title="Click to view Financial Health Index Formula & Breakdown">
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <h2 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center">
+                            Hospital Financial Health Score
+                            <button onclick="event.stopPropagation(); openKpiDefinitionModal('Financial Health Score')" class="ml-1 text-teal-600 hover:text-teal-500" title="View KPI Formula & Definition"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i></button>
+                        </h2>
+                        <span id="healthBadge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300">Excellent</span>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Weighted index (Liquidity, EBITDA, Denial Realization, AR Days)</p>
+                </div>
+
+                <div class="flex items-center justify-center my-2 relative">
+                    <svg class="w-36 h-36 transform -rotate-90" viewBox="0 0 36 36">
+                        <path class="text-slate-100 dark:text-slate-800" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                        <path id="gaugeArc" class="text-teal-600 dark:text-teal-400 gauge-circle" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                    <div class="absolute flex flex-col items-center justify-center text-center">
+                        <span id="healthScoreValue" class="text-3xl font-extrabold text-slate-900 dark:text-white">0</span>
+                        <span class="text-[10px] uppercase font-bold text-slate-400">Target: 85+</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-center pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+                    <div class="p-1.5 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                        <span class="text-slate-500 dark:text-slate-400 block">EBITDA Margin</span>
+                        <span id="ebitdaMargin" class="font-bold text-slate-800 dark:text-slate-100">0%</span>
+                    </div>
+                    <div class="p-1.5 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                        <span class="text-slate-500 dark:text-slate-400 block">Days Cash on Hand</span>
+                        <span id="daysCashOnHand" class="font-bold text-slate-800 dark:text-slate-100">0 Days</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Executive Alerts & AI Advisor Grid -->
+            <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Executive Alerts Panel -->
+                <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5 flex flex-col justify-between" id="sec-alerts">
+                    <div class="flex justify-between items-center mb-3">
+                        <div class="flex items-center space-x-2">
+                            <div class="p-1.5 bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 rounded-lg">
+                                <i data-lucide="bell-ring" class="w-4 h-4"></i>
+                            </div>
+                            <h2 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Executive Alerts</h2>
+                        </div>
+                        <span class="text-[11px] text-slate-400">Click alert for incident log</span>
+                    </div>
+                    <div id="alertsList" class="space-y-2 max-h-[160px] overflow-y-auto pr-1"></div>
+                    <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
+                        <span class="flex items-center"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500 mr-1"></i> NABH / Governance Compliant</span>
+                    </div>
+                </div>
+
+                <!-- AI Financial Advisor Panel -->
+                <div onclick="openAiAdvisorReport()" id="sec-aiadvisor" class="clickable-card bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-900 text-white rounded-xl shadow-md p-5 flex flex-col justify-between relative overflow-hidden border border-indigo-700/50" title="Click to launch Predictive Intelligence & Scenario Analysis">
+                    <div class="absolute -right-6 -top-6 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center space-x-2">
+                                <div class="p-1.5 bg-indigo-500/20 text-indigo-300 rounded-lg border border-indigo-500/30">
+                                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                </div>
+                                <h2 class="text-xs font-bold text-indigo-200 uppercase tracking-wider flex items-center">
+                                    AI Financial Advisor <i data-lucide="external-link" class="w-3 h-3 ml-1 text-indigo-300"></i>
+                                </h2>
+                            </div>
+                            <span class="text-[10px] bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 px-2 py-0.5 rounded-full font-semibold">Predictive Engine</span>
+                        </div>
+                        <div class="space-y-2.5 mt-2">
+                            <div>
+                                <span class="text-[10px] font-semibold uppercase tracking-wider text-slate-400 block">Strategic Recommendation</span>
+                                <p id="aiRecText" class="text-xs font-medium text-indigo-100 leading-snug mt-0.5">Loading AI Recommendation...</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-indigo-800/60">
+                                <div>
+                                    <span class="text-[10px] text-slate-400 block">Expected Revenue Impact</span>
+                                    <span id="aiImpactValue" class="text-sm font-bold text-emerald-400">₹0</span>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] text-slate-400 block">AI Confidence Score</span>
+                                    <div class="flex items-center space-x-1.5 mt-0.5">
+                                        <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                                            <div id="aiConfidenceBar" class="bg-indigo-400 h-1.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                        </div>
+                                        <span id="aiConfidenceText" class="text-xs font-bold text-indigo-300">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 border-t border-indigo-800/40 text-[10px] text-indigo-300/70 flex justify-between items-center">
+                        <span>Model: Hospital-RCM Engine v4</span>
+                        <span class="text-teal-400 flex items-center"><i data-lucide="check-circle" class="w-3 h-3 mr-1"></i> Optimization Active</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Metrics Ribbon -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4" id="sec-kpis">
+            
+            <!-- Gross Revenue KPI -->
+            <div onclick="openDrilldownModal('grossRev')" class="clickable-card bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden" title="Click to view Revenue Line Breakdown & Patient Volume">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide flex items-center">
+                            Gross Revenue
+                            <button onclick="event.stopPropagation(); openKpiDefinitionModal('Gross Revenue')" class="ml-1 text-slate-400 hover:text-teal-600"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i></button>
+                        </p>
+                        <h3 id="kpiGrossRev" class="text-xl font-bold text-slate-900 dark:text-white mt-1">₹0</h3>
+                    </div>
+                    <div class="p-2 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg"><i data-lucide="indian-rupee" class="w-5 h-5"></i></div>
+                </div>
+                <div class="mt-3 flex items-center text-xs">
+                    <span id="kpiGrossRevTrend" class="font-semibold flex items-center text-emerald-600"><i data-lucide="trending-up" class="w-3.5 h-3.5 mr-0.5"></i> 0%</span>
+                    <span class="text-slate-400 ml-1.5">vs prior month</span>
+                </div>
+            </div>
+
+            <!-- EBITDA / Net Income KPI -->
+            <div onclick="openDrilldownModal('netInc')" class="clickable-card bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden" title="Click to view EBITDA & Net Profit Margin Analysis">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide flex items-center">
+                            EBITDA / Net Income
+                            <button onclick="event.stopPropagation(); openKpiDefinitionModal('EBITDA')" class="ml-1 text-slate-400 hover:text-teal-600"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i></button>
+                        </p>
+                        <h3 id="kpiNetInc" class="text-xl font-bold text-slate-900 dark:text-white mt-1">₹0</h3>
+                    </div>
+                    <div class="p-2 bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 rounded-lg"><i data-lucide="trending-up" class="w-5 h-5"></i></div>
+                </div>
+                <div class="mt-3 flex items-center text-xs">
+                    <span id="kpiNetIncTrend" class="font-semibold flex items-center text-emerald-600"><i data-lucide="trending-up" class="w-3.5 h-3.5 mr-0.5"></i> 0%</span>
+                    <span class="text-slate-400 ml-1.5">vs prior month</span>
+                </div>
+            </div>
+
+            <!-- Claims Denial Rate KPI -->
+            <div onclick="openDrilldownModal('denial')" class="clickable-card bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden" title="Click to view TPA & PM-JAY Claim Rejections">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide flex items-center">
+                            Claims Denial Rate
+                            <button onclick="event.stopPropagation(); openKpiDefinitionModal('Claims Denial Rate')" class="ml-1 text-slate-400 hover:text-teal-600"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i></button>
+                        </p>
+                        <h3 id="kpiDenialRate" class="text-xl font-bold text-slate-900 dark:text-white mt-1">0%</h3>
+                    </div>
+                    <div class="p-2 bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 rounded-lg"><i data-lucide="file-x" class="w-5 h-5"></i></div>
+                </div>
+                <div class="mt-3 flex items-center text-xs">
+                    <span id="kpiDenialTrend" class="font-semibold flex items-center text-emerald-600"><i data-lucide="trending-down" class="w-3.5 h-3.5 mr-0.5"></i> 0%</span>
+                    <span class="text-slate-400 ml-1.5">Target &lt; 5.0%</span>
+                </div>
+            </div>
+
+            <!-- Days in AR KPI -->
+            <div onclick="openDrilldownModal('arDays')" class="clickable-card bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden" title="Click to view Receivable Aging & Collection Realization">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide flex items-center">
+                            Days in AR
+                            <button onclick="event.stopPropagation(); openKpiDefinitionModal('Days in AR')" class="ml-1 text-slate-400 hover:text-teal-600"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i></button>
+                        </p>
+                        <h3 id="kpiDaysAR" class="text-xl font-bold text-slate-900 dark:text-white mt-1">0 Days</h3>
+                    </div>
+                    <div class="p-2 bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 rounded-lg"><i data-lucide="clock" class="w-5 h-5"></i></div>
+                </div>
+                <div class="mt-3 flex items-center text-xs">
+                    <span id="kpiARTrend" class="font-semibold flex items-center text-emerald-600"><i data-lucide="trending-down" class="w-3.5 h-3.5 mr-0.5"></i> 0</span>
+                    <span class="text-slate-400 ml-1.5">Target &lt; 40 Days</span>
+                </div>
+            </div>
+
+            <!-- Chair Occupancy KPI -->
+            <div onclick="openDrilldownModal('chair')" class="clickable-card bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden" title="Click to view Shift Dialysis Chair Capacity">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide flex items-center">
+                            Chair Occupancy
+                            <button onclick="event.stopPropagation(); openKpiDefinitionModal('Chair Occupancy')" class="ml-1 text-slate-400 hover:text-teal-600"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i></button>
+                        </p>
+                        <h3 id="kpiChairUtil" class="text-xl font-bold text-slate-900 dark:text-white mt-1">0%</h3>
+                    </div>
+                    <div class="p-2 bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 rounded-lg"><i data-lucide="armchair" class="w-5 h-5"></i></div>
+                </div>
+                <div class="mt-3 flex items-center text-xs">
+                    <span id="kpiChairTrend" class="font-semibold flex items-center text-emerald-600"><i data-lucide="trending-up" class="w-3.5 h-3.5 mr-0.5"></i> 0%</span>
+                    <span class="text-slate-400 ml-1.5">Shift capacity</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Operational Governance Row -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <!-- Machine Utilization -->
+            <div onclick="openMachineConsoleModal()" id="sec-machines" class="clickable-card md:col-span-4 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5 flex flex-col justify-between" title="Click to open Machine Console & Maintenance History">
+                <div class="flex justify-between items-center mb-3">
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center">
+                            Dialysis Machine Utilization
+                            <button onclick="event.stopPropagation(); openKpiDefinitionModal('Machine Utilization')" class="ml-1 text-slate-400 hover:text-teal-600"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i></button>
+                        </h3>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Hemodialysis Hardware Status Console</p>
+                    </div>
+                    <span class="p-1.5 bg-cyan-50 dark:bg-cyan-950/60 text-cyan-700 dark:text-cyan-400 rounded-lg"><i data-lucide="cpu" class="w-4 h-4"></i></span>
+                </div>
+                <div class="grid grid-cols-4 gap-2 my-2 text-center">
+                    <div class="p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-800"><span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium block">Installed</span><span id="machInstalled" class="text-lg font-extrabold text-slate-800 dark:text-slate-100">24</span></div>
+                    <div class="p-2 bg-emerald-50 dark:bg-emerald-950/50 rounded-lg border border-emerald-100 dark:border-emerald-900/50"><span class="text-[10px] text-emerald-700 dark:text-emerald-400 font-medium block">Running</span><span id="machRunning" class="text-lg font-extrabold text-emerald-800 dark:text-emerald-300">22</span></div>
+                    <div class="p-2 bg-amber-50 dark:bg-amber-950/50 rounded-lg border border-amber-100 dark:border-amber-900/50"><span class="text-[10px] text-amber-700 dark:text-amber-400 font-medium block">Maint.</span><span id="machMaint" class="text-lg font-extrabold text-amber-800 dark:text-amber-300">2</span></div>
+                    <div class="p-2 bg-teal-50 dark:bg-teal-950/50 rounded-lg border border-teal-100 dark:border-teal-900/50"><span class="text-[10px] text-teal-700 dark:text-teal-400 font-medium block">Util.</span><span id="machUtil" class="text-lg font-extrabold text-teal-800 dark:text-teal-300">91.6%</span></div>
+                </div>
+                <div class="space-y-1.5 mt-2">
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="text-slate-600 dark:text-slate-400">Hardware Fleet Load</span>
+                        <span id="machLoadText" class="text-teal-700 dark:text-teal-400">91.6% Operational</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
+                        <div id="machProgressBar" class="bg-teal-600 dark:bg-teal-500 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Risk Monitor Section -->
+            <div onclick="openFinancialRiskCommandCenter()" id="sec-risks" class="clickable-card md:col-span-5 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5 flex flex-col justify-between" title="Click to view Bad Debts, Legal Reserves & Appeals Register">
+                <div class="flex justify-between items-center mb-2">
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center">
+                            Financial Risk Monitor <i data-lucide="external-link" class="w-3 h-3 ml-1 text-slate-400"></i>
+                        </h3>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Provisions, Refunds, Appeals & Leakage Command</p>
+                    </div>
+                    <span class="p-1.5 bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 rounded-lg"><i data-lucide="shield-alert" class="w-4 h-4"></i></span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-xs">
+                    <div class="p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-800"><span class="text-slate-500 dark:text-slate-400 block text-[10px]">Patient Refunds</span><span id="riskRefunds" class="font-bold text-slate-800 dark:text-slate-100">₹0</span></div>
+                    <div class="p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-800"><span class="text-slate-500 dark:text-slate-400 block text-[10px]">Insurance Appeals</span><span id="riskAppeals" class="font-bold text-slate-800 dark:text-slate-100">0 Cases</span></div>
+                    <div class="p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-800"><span class="text-slate-500 dark:text-slate-400 block text-[10px]">Outstanding AR</span><span id="riskAR" class="font-bold text-amber-700 dark:text-amber-400">₹0</span></div>
+                    <div class="p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-800"><span class="text-slate-500 dark:text-slate-400 block text-[10px]">Bad Debt</span><span id="riskBadDebt" class="font-bold text-rose-600 dark:text-rose-400">₹0</span></div>
+                    <div class="p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-800"><span class="text-slate-500 dark:text-slate-400 block text-[10px]">Legal Reserve</span><span id="riskLegal" class="font-bold text-slate-800 dark:text-slate-100">₹0</span></div>
+                    <div class="p-2 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-800"><span class="text-slate-500 dark:text-slate-400 block text-[10px]">Revenue Leakage</span><span id="riskLeakage" class="font-bold text-rose-700 dark:text-rose-400">₹0</span></div>
+                </div>
+                <div class="flex justify-between items-center pt-2 mt-1 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400">
+                    <span>Audit Status: RCM Compliance Verified</span>
+                    <span class="font-semibold text-slate-700 dark:text-slate-300">Risk Exposure Managed</span>
+                </div>
+            </div>
+
+            <!-- RO Plant Widget -->
+            <div onclick="openRoPlantDashboard()" id="sec-roplant" class="clickable-card md:col-span-3 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5 flex flex-col justify-between" title="Click to view Dialysis RO Water Purification & Endotoxin Audit">
+                <div class="flex justify-between items-center mb-2">
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center">RO Water Plant <i data-lucide="external-link" class="w-3 h-3 ml-1 text-slate-400"></i></h3>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Dialysis Water System Quality</p>
+                    </div>
+                    <span class="p-1.5 bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 rounded-lg"><i data-lucide="droplets" class="w-4 h-4"></i></span>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-500 dark:text-slate-400">Plant Status</span>
+                        <span id="roStatus" class="font-bold text-emerald-700 dark:text-emerald-400 flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span> Operational</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-500 dark:text-slate-400">Purification Efficiency</span>
+                        <span id="roEfficiency" class="font-bold text-slate-800 dark:text-slate-100">0%</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-500 dark:text-slate-400">Endotoxin Level</span>
+                        <span class="font-semibold text-emerald-700 dark:text-emerald-400">&lt; 0.003 EU/ml</span>
+                    </div>
+                </div>
+                <div class="mt-2 p-2 bg-blue-50/60 dark:bg-blue-950/40 rounded-lg border border-blue-100 dark:border-blue-900/40 flex justify-between items-center text-xs">
+                    <span class="text-blue-900 dark:text-blue-300 font-medium">Filter Maint. Due:</span>
+                    <span id="roMaintDue" class="font-extrabold text-blue-700 dark:text-blue-400">0 Days</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Industry Benchmark Comparison Dashboard -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5" id="sec-benchmarks">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">Tier-1 Healthcare Industry Benchmarking</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Variance analysis vs Apollo, Narayana Health & Manipal Hospitals</p>
+                </div>
+                <span class="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold px-2 py-0.5 rounded">Q3 National Averages</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-slate-800/80 border-y border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 uppercase font-semibold">
+                            <th class="py-2.5 px-3">Performance Metric</th>
+                            <th class="py-2.5 px-3 text-right">KidneyCare Hospital</th>
+                            <th class="py-2.5 px-3 text-right">Industry Avg</th>
+                            <th class="py-2.5 px-3 text-right">Best-in-Class</th>
+                            <th class="py-2.5 px-3 text-center">Variance</th>
+                            <th class="py-2.5 px-3 text-center">Benchmark Indicator</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="benchmarkTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analytics Section 1: Revenue & Expenses -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-7 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5" id="sec-revenue">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">Clinical Revenue Sources Breakdown</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Click any service bar for HIS patient & billing drilldown</p>
+                    </div>
+                    <span class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-md font-medium">Monthly Actuals</span>
+                </div>
+                <div class="h-64 cursor-pointer"><canvas id="revenueSourcesChart"></canvas></div>
+            </div>
+
+            <div class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5" id="sec-cost">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">Cost Structure & OPEX Control</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Click category for granular expense ledger</p>
+                    </div>
+                    <span class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-md font-medium">Cost Distribution</span>
+                </div>
+                <div class="h-64 relative flex items-center justify-center cursor-pointer"><canvas id="costControlChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- Revenue Leakage Heatmap -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5" id="sec-leakage">
+            <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-1">RCM Revenue Leakage Matrix & Audit Heatmap</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Quantified billing anomalies, unbilled services, and pharmacy leakage risks</p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs" id="leakageGrid">
+            </div>
+        </div>
+
+        <!-- Analytics Section 2: Indian Payer Mix & Departmental Budget Variance -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-6 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5" id="sec-claims">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">Billing & Healthcare Payer Mix</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">PM-JAY, CGHS, ECHS, Private Insurance & Cash Mix</p>
+                    </div>
+                    <span class="text-xs bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 font-semibold px-2.5 py-1 rounded-md border border-teal-100 dark:border-teal-900">RCM Portfolio</span>
+                </div>
+                <div class="h-64 cursor-pointer"><canvas id="payerMixChart"></canvas></div>
+            </div>
+
+            <div class="lg:col-span-6 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5" id="sec-budget">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">Departmental Budget Allocation vs Actual</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Click department bar for variance & forecast</p>
+                    </div>
+                    <span class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-md font-medium">Budget Variance</span>
+                </div>
+                <div class="h-64 cursor-pointer"><canvas id="budgetVarianceChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- AI Q1 2027 Forecast Module -->
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-xl shadow-md p-5 border border-indigo-800/50" id="sec-forecast">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <h3 class="text-xs font-bold text-teal-400 uppercase tracking-wider flex items-center">
+                        <i data-lucide="sparkles" class="w-4 h-4 mr-1.5"></i> AI Q1 2027 Predictive Forecast Model
+                    </h3>
+                    <p class="text-xs text-slate-300">Statistical projection with 95% confidence intervals</p>
+                </div>
+                <span class="text-[10px] bg-indigo-500/30 text-indigo-200 px-2.5 py-1 rounded-full border border-indigo-400/30 font-semibold">ARIMA + Neural Engine</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                <div class="lg:col-span-7 h-48">
+                    <canvas id="forecastChart"></canvas>
+                </div>
+                <div class="lg:col-span-5 grid grid-cols-1 gap-2 text-xs">
+                    <div class="p-2.5 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
+                        <div>
+                            <span class="font-bold text-amber-400 block">Jan 2027 Proj. Revenue</span>
+                            <span class="text-[10px] text-slate-400">Net: ₹78.2 Lakh | 2,640 Sessions</span>
+                        </div>
+                        <span class="font-extrabold text-emerald-400 text-sm">₹3.58 Cr ± 2.1%</span>
+                    </div>
+                    <div class="p-2.5 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
+                        <div>
+                            <span class="font-bold text-amber-400 block">Feb 2027 Proj. Revenue</span>
+                            <span class="text-[10px] text-slate-400">Net: ₹81.0 Lakh | 2,710 Sessions</span>
+                        </div>
+                        <span class="font-extrabold text-emerald-400 text-sm">₹3.65 Cr ± 2.4%</span>
+                    </div>
+                    <div class="p-2.5 bg-slate-900/80 rounded-lg border border-slate-800 flex justify-between items-center">
+                        <div>
+                            <span class="font-bold text-amber-400 block">Mar 2027 Proj. Revenue</span>
+                            <span class="text-[10px] text-slate-400">Net: ₹86.5 Lakh | 2,850 Sessions</span>
+                        </div>
+                        <span class="font-extrabold text-emerald-400 text-sm">₹3.82 Cr ± 2.8%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Executive Timeline & ESG Dashboards Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Timeline -->
+            <div class="lg:col-span-6 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5" id="sec-timeline">
+                <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3">2026 Executive Milestone Timeline</h3>
+                <div class="space-y-2 max-h-56 overflow-y-auto pr-1 text-xs" id="timelineList">
+                </div>
+            </div>
+
+            <!-- NABH & ESG Sustainability -->
+            <div class="lg:col-span-6 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5" id="sec-compliance">
+                <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3">NABH Accreditation & ESG Sustainability</h3>
+                <div class="space-y-3 text-xs" id="nabhProgressList">
+                    <div>
+                        <div class="flex justify-between mb-1"><span class="font-semibold text-slate-700 dark:text-slate-300">NABH Clinical Governance Compliance</span><span id="nabhCompScore" class="font-bold text-emerald-700 dark:text-emerald-400">96.8%</span></div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2"><div id="nabhCompBar" class="bg-emerald-600 h-2 rounded-full" style="width: 96.8%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1"><span class="font-semibold text-slate-700 dark:text-slate-300">RO Water Plant Recovery Efficiency</span><span id="roEffScore" class="font-bold text-teal-700 dark:text-teal-400">97.4%</span></div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2"><div id="roEffBar" class="bg-teal-600 h-2 rounded-full" style="width: 97.4%"></div></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-slate-100 dark:border-slate-800" id="esgMetricsGrid">
+                        <div class="p-2 bg-slate-50 dark:bg-slate-800/50 rounded"><span class="text-slate-500 block">Biomedical Waste:</span><span class="font-bold text-slate-800 dark:text-slate-200">100% Segregated</span></div>
+                        <div class="p-2 bg-slate-50 dark:bg-slate-800/50 rounded"><span class="text-slate-500 block">Solar Hybrid Energy:</span><span class="font-bold text-emerald-700 dark:text-emerald-400">18.4% Off-Grid</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Board Executive Decision Register -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5" id="sec-decisionlog">
+            <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-3">Board Executive Decision Register</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-slate-800/80 border-y border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 uppercase font-semibold">
+                            <th class="py-2.5 px-3">Strategic Decision</th>
+                            <th class="py-2.5 px-3">Owner</th>
+                            <th class="py-2.5 px-3 text-right">Financial Impact</th>
+                            <th class="py-2.5 px-3">Implementation</th>
+                            <th class="py-2.5 px-3 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="decisionRegisterBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Capital Investment Tracking & CAPEX Assets -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-5" id="sec-capex">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                <div>
+                    <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center">
+                        Capital Assets & CAPEX Deployment <button onclick="openCapitalAssetsPage()" class="ml-2 text-[10px] bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 px-2 py-0.5 rounded border border-teal-200 dark:border-teal-800 font-semibold hover:bg-teal-100 transition">View Asset Registry</button>
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Major medical equipment & infrastructure projects tracking for FY 2026</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs text-slate-500 dark:text-slate-400">YTD Total CAPEX Deployed: </span>
+                    <span id="capexTotal" class="text-sm font-bold text-slate-900 dark:text-white">₹4.85 Cr</span>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-slate-800/80 border-y border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 uppercase font-semibold">
+                            <th class="py-3 px-4">Investment Project / Equipment</th>
+                            <th class="py-3 px-4">Category</th>
+                            <th class="py-3 px-4 text-right">Budgeted CapEx</th>
+                            <th class="py-3 px-4 text-right">Spent to Date</th>
+                            <th class="py-3 px-4">Deployment Progress</th>
+                            <th class="py-3 px-4 text-center">Projected Annual ROI</th>
+                            <th class="py-3 px-4 text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="capexTableBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FLOATING AI FINANCIAL ASSISTANT CHATBOT -->
+    <div class="fixed bottom-5 right-5 z-50">
+        <div id="aiChatWindow" class="hidden w-80 sm:w-96 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col mb-3">
+            <div class="bg-slate-900 text-white p-3.5 flex justify-between items-center text-xs font-bold border-b border-slate-800">
+                <span class="flex items-center"><i data-lucide="bot" class="w-4 h-4 mr-2 text-teal-400"></i> AI Executive Assistant</span>
+                <button onclick="toggleAiChat()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div id="chatMessages" class="p-3 space-y-2.5 h-64 overflow-y-auto text-xs bg-slate-50 dark:bg-slate-950">
+                <div class="p-2.5 bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-900/60 text-indigo-950 dark:text-indigo-200 rounded-lg leading-relaxed">
+                    Hello Executive! Ask me any question regarding <span id="chatMonthLabel">Oct 2026</span> performance, claims, machine utilization, or budget variances.
+                </div>
+            </div>
+            <div class="p-2 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center space-x-1">
+                <input type="text" id="chatInput" onkeyup="if(event.key==='Enter') sendChatMessage()" placeholder="Ask AI e.g. Why did revenue rise?" class="w-full text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:border-teal-500 dark:text-white">
+                <button onclick="sendChatMessage()" class="p-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500"><i data-lucide="send" class="w-3.5 h-3.5"></i></button>
+            </div>
+        </div>
+        <button onclick="toggleAiChat()" class="p-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full shadow-2xl flex items-center justify-center transition transform hover:scale-105 border border-indigo-400 chat-glow" title="Launch AI Chatbot Assistant">
+            <i data-lucide="message-square-text" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <!-- FINANCIAL SCENARIO SIMULATOR MODAL -->
+    <div id="scenarioSimulatorModal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-4xl w-full mx-4 overflow-hidden border border-slate-200 dark:border-slate-800 max-h-[92vh] flex flex-col">
+            <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center border-b border-slate-800">
+                <div class="flex items-center space-x-2">
+                    <div class="p-1.5 bg-emerald-600 rounded-lg"><i data-lucide="sliders" class="w-5 h-5 text-white"></i></div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Executive Financial Scenario Simulator</h3>
+                        <p class="text-[11px] text-teal-400">Live Mathematical Sensitivity & Strategy Engine</p>
+                    </div>
+                </div>
+                <button onclick="closeScenarioSimulator()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="p-6 space-y-5 overflow-y-auto flex-1 text-xs text-slate-800 dark:text-slate-200">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <div>
+                        <label class="font-bold text-slate-700 dark:text-slate-300 block mb-1">Dialysis Charge Increase: <span id="valCharge" class="text-teal-700 dark:text-teal-400">0%</span></label>
+                        <input type="range" id="simCharge" min="0" max="25" value="0" oninput="runSimulation()" class="w-full accent-teal-600">
+                    </div>
+                    <div>
+                        <label class="font-bold text-slate-700 dark:text-slate-300 block mb-1">OPD Patient Volume: <span id="valOpd" class="text-teal-700 dark:text-teal-400">+0%</span></label>
+                        <input type="range" id="simOpd" min="0" max="30" value="0" oninput="runSimulation()" class="w-full accent-teal-600">
+                    </div>
+                    <div>
+                        <label class="font-bold text-slate-700 dark:text-slate-300 block mb-1">Add Dialysis Machines: <span id="valMach" class="text-teal-700 dark:text-teal-400">+0 Units</span></label>
+                        <input type="range" id="simMach" min="0" max="8" value="0" oninput="runSimulation()" class="w-full accent-teal-600">
+                    </div>
+                    <div>
+                        <label class="font-bold text-slate-700 dark:text-slate-300 block mb-1">Reduce Denial Rate by: <span id="valDenial" class="text-teal-700 dark:text-teal-400">-0%</span></label>
+                        <input type="range" id="simDenial" min="0" max="3" step="0.5" value="0" oninput="runSimulation()" class="w-full accent-teal-600">
+                    </div>
+                    <div>
+                        <label class="font-bold text-slate-700 dark:text-slate-300 block mb-1">Reduce AR Days by: <span id="valAr" class="text-teal-700 dark:text-teal-400">-0 Days</span></label>
+                        <input type="range" id="simAr" min="0" max="10" value="0" oninput="runSimulation()" class="w-full accent-teal-600">
+                    </div>
+                    <div>
+                        <label class="font-bold text-slate-700 dark:text-slate-300 block mb-1">Enable 4th Evening Shift?</label>
+                        <select id="sim4thShift" onchange="runSimulation()" class="w-full p-1.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded font-bold text-slate-800 dark:text-white">
+                            <option value="0">No (3 Shifts Standard)</option>
+                            <option value="1">Yes (+14% Capacity Yield)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                    <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <span class="text-[10px] text-slate-500 dark:text-slate-400 font-bold block">Gross Revenue Impact</span>
+                        <span id="simBaseRev" class="text-xs text-slate-400 line-through block">₹0</span>
+                        <span id="simNewRev" class="text-base font-black text-emerald-600 dark:text-emerald-400">₹0</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <span class="text-[10px] text-slate-500 dark:text-slate-400 font-bold block">Net Income Impact</span>
+                        <span id="simBaseIncome" class="text-xs text-slate-400 line-through block">₹0</span>
+                        <span id="simNewIncome" class="text-base font-black text-teal-600 dark:text-teal-400">₹0</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <span class="text-[10px] text-slate-500 dark:text-slate-400 font-bold block">Projected EBITDA Margin</span>
+                        <span id="simBaseEbitda" class="text-xs text-slate-400 line-through block">0%</span>
+                        <span id="simNewEbitda" class="text-base font-black text-indigo-600 dark:text-indigo-400">0%</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <span class="text-[10px] text-slate-500 dark:text-slate-400 font-bold block">CapEx Payback Horizon</span>
+                        <span id="simPayback" class="text-base font-black text-amber-600 dark:text-amber-400">14.2 Months</span>
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-emerald-950 dark:text-emerald-200 font-medium">
+                    <span class="font-bold text-emerald-900 dark:text-emerald-300 block mb-0.5"><i data-lucide="sparkles" class="w-3.5 h-3.5 inline mr-1"></i> AI Scenario Analysis Insight:</span>
+                    <p id="simAiInsight">Adjust sliders above to calculate live sensitivity for current baseline.</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 dark:bg-slate-800 px-6 py-3 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
+                <span>Enterprise Decision Support Engine</span>
+                <button onclick="closeScenarioSimulator()" class="px-4 py-1.5 bg-slate-800 text-white font-medium rounded-lg hover:bg-slate-700">Close Simulator</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GENERAL DRILL-DOWN MODAL -->
+    <div id="drilldownModal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl max-w-3xl w-full mx-4 overflow-hidden border border-slate-200 dark:border-slate-800 transform transition-all">
+            <!-- Modal Breadcrumb Header -->
+            <div class="bg-slate-900 text-white px-6 py-3 border-b border-slate-800 flex justify-between items-center text-xs">
+                <div class="flex items-center space-x-1.5 font-medium text-slate-300" id="modalBreadcrumb">
+                    <span>Dashboard</span> <i data-lucide="chevron-right" class="w-3 h-3"></i> <span>Analysis</span>
+                </div>
+                <button onclick="closeDrilldownModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="bg-slate-900 text-white px-6 py-3 flex justify-between items-center border-b border-slate-800">
+                <div class="flex items-center space-x-2">
+                    <div id="modalIconBg" class="p-1.5 bg-teal-600 rounded-lg"><i id="modalIcon" data-lucide="bar-chart-2" class="w-5 h-5 text-white"></i></div>
+                    <div>
+                        <h3 id="modalTitle" class="text-sm font-bold text-white">HIS / BI Drilldown</h3>
+                        <p id="modalSubtitle" class="text-[11px] text-slate-400">Detailed Analytics Console</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto text-slate-800 dark:text-slate-200" id="modalBodyContent"></div>
+
+            <div class="bg-slate-50 dark:bg-slate-800 px-6 py-3 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
+                <span>Integrated HIS / Revenue Cycle Management Suite</span>
+                <button onclick="closeDrilldownModal()" class="px-4 py-1.5 bg-slate-800 text-white font-medium rounded-lg hover:bg-slate-700">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXECUTIVE KPI DEFINITIONS MODAL -->
+    <div id="kpiDefinitionModal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-2xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden border border-slate-200 dark:border-slate-800">
+            <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center border-b border-slate-800">
+                <div class="flex items-center space-x-2">
+                    <div class="p-1.5 bg-teal-600 rounded-lg"><i data-lucide="book-open" class="w-5 h-5 text-white"></i></div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white" id="defKpiTitle">KPI Definition & Benchmark</h3>
+                        <p class="text-[11px] text-teal-400">Healthcare Executive Financial Standards</p>
+                    </div>
+                </div>
+                <button onclick="closeKpiDefinitionModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="p-6 space-y-3.5 text-xs">
+                <div><span class="font-bold text-slate-500 dark:text-slate-400 uppercase block text-[10px]">Definition</span><p id="defText" class="text-slate-800 dark:text-slate-200 font-medium">--</p></div>
+                <div><span class="font-bold text-slate-500 dark:text-slate-400 uppercase block text-[10px]">Calculation Formula</span><p id="defFormula" class="font-mono bg-slate-100 dark:bg-slate-800 p-2 rounded text-teal-700 dark:text-teal-300 font-bold">--</p></div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="p-2.5 bg-slate-50 dark:bg-slate-800/50 rounded"><span class="text-slate-500 dark:text-slate-400 block text-[10px]">Industry Benchmark</span><strong id="defBenchmark" class="text-slate-800 dark:text-slate-200">--</strong></div>
+                    <div class="p-2.5 bg-teal-50 dark:bg-teal-950/50 rounded"><span class="text-teal-800 dark:text-teal-300 block text-[10px]">Hospital Target</span><strong id="defTarget" class="text-teal-900 dark:text-teal-200">--</strong></div>
+                </div>
+                <div><span class="font-bold text-slate-500 dark:text-slate-400 uppercase block text-[10px]">Business & Financial Importance</span><p id="defBizImpact" class="text-slate-700 dark:text-slate-300 leading-relaxed">--</p></div>
+                <div><span class="font-bold text-slate-500 dark:text-slate-400 uppercase block text-[10px]">Clinical & Operational Importance</span><p id="defClinImpact" class="text-slate-700 dark:text-slate-300 leading-relaxed">--</p></div>
+            </div>
+
+            <div class="bg-slate-50 dark:bg-slate-800 px-6 py-3 border-t border-slate-200 dark:border-slate-700 text-right">
+                <button onclick="closeKpiDefinitionModal()" class="px-4 py-1.5 bg-slate-800 text-white font-medium rounded-lg text-xs hover:bg-slate-700">Got It</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXECUTIVE COMPREHENSIVE REPORT GENERATOR MODAL -->
+    <div id="executiveReportModal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-3xl w-full mx-4 overflow-hidden border border-slate-200 dark:border-slate-800 max-h-[90vh] flex flex-col">
+            <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center border-b border-slate-800">
+                <div class="flex items-center space-x-2">
+                    <div class="p-1.5 bg-teal-600 rounded-lg"><i data-lucide="file-check" class="w-5 h-5 text-white"></i></div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Executive Comprehensive Monthly Financial Report</h3>
+                        <p class="text-[11px] text-teal-400" id="reportHeaderSubtitle">KidneyCare Super Specialty Hospital</p>
+                    </div>
+                </div>
+                <button onclick="closeExecutiveReportGenerator()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="p-6 space-y-4 overflow-y-auto flex-1 text-xs text-slate-800 dark:text-slate-200" id="executiveReportContent">
+                <!-- Dynamically populated report text -->
+            </div>
+
+            <div class="bg-slate-50 dark:bg-slate-800 px-6 py-3 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center text-xs">
+                <span class="text-slate-500">Official Board Document • Approved by CFO</span>
+                <button onclick="window.print()" class="px-4 py-1.5 bg-teal-600 text-white font-bold rounded-lg hover:bg-teal-500 flex items-center space-x-1.5">
+                    <i data-lucide="printer" class="w-4 h-4"></i>
+                    <span>Export / Print PDF Report</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOARD MEETING MODE MODAL -->
+    <div id="boardMeetingModal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden transition-opacity duration-300">
+        <div class="bg-slate-950 text-white rounded-2xl shadow-2xl max-w-5xl w-full mx-4 overflow-hidden border border-slate-800 transform transition-all max-h-[92vh] flex flex-col">
+            <div class="bg-slate-900 px-8 py-5 border-b border-slate-800 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-amber-500 rounded-xl text-slate-950 font-bold"><i data-lucide="award" class="w-6 h-6"></i></div>
+                    <div>
+                        <h2 class="text-base font-bold text-white tracking-wide">Board of Directors Presentation Briefing</h2>
+                        <p id="boardModalSubtitle" class="text-xs text-amber-400 font-medium">KidneyCare Hospital Board Executive Brief</p>
+                    </div>
+                </div>
+                <button onclick="closeBoardMeetingMode()" class="p-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-400 hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+
+            <div class="p-8 space-y-6 overflow-y-auto flex-1">
+                <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2 flex items-center"><i data-lucide="file-text" class="w-4 h-4 mr-1.5"></i> Executive Summary</h3>
+                    <p id="boardExecSummaryText" class="text-xs text-slate-300 leading-relaxed">Loading Board Summary...</p>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Top 5 Executive KPIs</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3" id="boardTopKpisGrid"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-900/60 border border-rose-900/40 p-4 rounded-xl">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-rose-400 mb-3 flex items-center"><i data-lucide="shield-alert" class="w-4 h-4 mr-1.5"></i> Three Key Financial Risks</h3>
+                        <ul id="boardRisksList" class="space-y-2 text-xs text-slate-300"></ul>
+                    </div>
+                    <div class="bg-slate-900/60 border border-indigo-800/40 p-4 rounded-xl">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-300 mb-3 flex items-center"><i data-lucide="sparkles" class="w-4 h-4 mr-1.5"></i> Three AI Financial Advisor Actions</h3>
+                        <ul id="boardAiRecsList" class="space-y-2 text-xs text-slate-300"></ul>
+                    </div>
+                </div>
+
+                <!-- BOARD MEETING PACK DOWNLOADS -->
+                <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-xl">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-3 flex items-center">
+                        <i data-lucide="download" class="w-4 h-4 mr-1.5"></i> Download Official Board Meeting Pack & Reports
+                    </h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
+                        <button onclick="exportReport('Board Pack PDF')" class="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 flex flex-col items-center text-center"><i data-lucide="file-check" class="w-4 h-4 mb-1 text-amber-400"></i> Board Pack PDF</button>
+                        <button onclick="exportReport('Financial Report')" class="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 flex flex-col items-center text-center"><i data-lucide="sheet" class="w-4 h-4 mb-1 text-emerald-400"></i> Financial Report</button>
+                        <button onclick="exportReport('KPI Snapshot')" class="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 flex flex-col items-center text-center"><i data-lucide="gauge" class="w-4 h-4 mb-1 text-cyan-400"></i> KPI Snapshot</button>
+                        <button onclick="exportReport('Audit Summary')" class="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 flex flex-col items-center text-center"><i data-lucide="shield-check" class="w-4 h-4 mb-1 text-teal-400"></i> Audit Summary</button>
+                        <button onclick="exportReport('AI Recs Pack')" class="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 flex flex-col items-center text-center"><i data-lucide="sparkles" class="w-4 h-4 mb-1 text-indigo-400"></i> AI Insights</button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900/90 border border-teal-900/50 p-5 rounded-xl">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-teal-400 mb-3 flex items-center"><i data-lucide="arrow-up-right" class="w-4 h-4 mr-1.5"></i> What Changed Since Last Month?</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs" id="boardWhatChangedGrid"></div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 px-8 py-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
+                <span>Presented to Board Audit & Finance Committee</span>
+                <button onclick="closeBoardMeetingMode()" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg">Close Board View</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXECUTIVE BRIEFING MODAL -->
+    <div id="executiveBriefingModal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop hidden transition-opacity duration-300">
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl max-w-xl w-full mx-4 overflow-hidden border border-slate-200 dark:border-slate-800">
+            <div class="bg-indigo-900 text-white px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="p-1.5 bg-indigo-600 rounded-lg"><i data-lucide="presentation" class="w-5 h-5 text-white"></i></div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Executive Briefing Narrative</h3>
+                        <p id="briefingMonthSubtitle" class="text-[11px] text-indigo-300">Monthly CFO Summary</p>
+                    </div>
+                </div>
+                <button onclick="closeExecutiveBriefing()" class="text-indigo-300 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="p-6 space-y-4">
+                <div id="briefingNarrative" class="space-y-3 text-xs text-slate-700 dark:text-slate-300 leading-relaxed"></div>
+                <div class="p-3 bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-900 text-indigo-950 dark:text-indigo-200 rounded-lg text-xs font-medium">
+                    <span class="font-bold text-indigo-900 dark:text-indigo-300 block mb-0.5">Key Action Item for CFO Approval:</span>
+                    <p id="briefingActionItem">Action item content...</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 dark:bg-slate-800 px-6 py-3 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center text-xs text-slate-500">
+                <span>Confidential - Executive Leadership Team</span>
+                <button onclick="closeExecutiveBriefing()" class="px-4 py-1.5 bg-indigo-900 text-white font-medium rounded-lg hover:bg-indigo-800">Acknowledge</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-12 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 dark:text-slate-400 gap-2">
+            <div>
+                <span>KidneyCare Super Specialty Hospital & Institute &copy; 2026</span>
+                <span class="mx-2">|</span>
+                <span>Enterprise CFO Decision Support & HIS/BI Suite</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span>NABH & HIPAA Compliant</span>
+                <span>Academic Demonstration Version</span>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 text-center text-[11px] text-slate-400 italic">
+            This dashboard uses simulated financial and operational data for academic demonstration purposes only.
+        </div>
+    </footer>
+
+    <!-- JavaScript HIS / BI Logic -->
+    <script>
+        lucide.createIcons();
+
+        function formatINR(val) {
+            if (val >= 10000000) {
+                return '₹' + (val / 10000000).toFixed(2) + ' Cr';
+            } else if (val >= 100000) {
+                return '₹' + (val / 100000).toFixed(1) + ' Lakh';
+            } else if (val >= 1000) {
+                return '₹' + (val / 1000).toFixed(0) + 'k';
+            }
+            return '₹' + val.toLocaleString('en-IN');
+        }
+
+        // -------------------------------------------------------------
+        // 1. DATA MODEL
+        // -------------------------------------------------------------
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        let userRole = "CFO";
+        let currentMonth = "Oct";
+
+        const financialData = {
+            "Jan": {
+                healthScore: 82, ebitdaMargin: 22.4, daysCashOnHand: 68, grossRevenue: 28500000, netIncome: 5200000, denialRate: 5.8, daysInAR: 44, chairUtilization: 78,
+                machines: { installed: 24, running: 20, maintenance: 4, utilization: 83.3, sessionsToday: 68, revenueToday: 136000, avgDowntime: 12 },
+                risk: { refunds: 85000, appeals: 22, arOutstanding: 2250000, badDebt: 150000, legalProvision: 400000, revenueLeakage: 110000, complianceScore: 88 },
+                roPlant: { status: "Operational", efficiency: "96.2%", maintDue: "12 Days", conductivity: "4.2 µS/cm", chloramine: "0.01 ppm", dailyWater: "18,500 L" },
+                aiAdvisor: { rec: "Optimize PM-JAY pre-authorization desk to curb 5.8% claim denial bottleneck.", impact: "₹14 Lakh/year", confidence: 91 },
+                briefing: { points: ["Post-holiday dip in elective inpatient procedures led to Gross Revenue of ₹2.85 Cr.", "Higher maintenance expenses observed due to annual equipment recalibration cycles.", "PM-JAY pre-authorization portal delays raised claim denial rate to 5.8%."], action: "Deploy dedicated RCM specialist for government scheme pre-authorizations." },
+                revenueSources: { outpatientDialysis: 11000000, inpatientNephrology: 8500000, kidneyTransplant: 4800000, vascularAccessSurgery: 2200000, labDiagnostics: 2000000 },
+                expenses: { clinicalSalaries: 10500000, dialysisConsumables: 4800000, pharmaceuticals: 3200000, facilityUtilities: 1800000, adminDepreciation: 3000000 },
+                payerMix: { privateInsurance: 38, pmjay: 28, cghs: 16, echs: 10, cash: 8 },
+                budgetVariance: { dialysisUnit: { budget: 9500000, actual: 9800000 }, transplantSurg: { budget: 4000000, actual: 3900000 }, icuInpatient: { budget: 6000000, actual: 6200000 }, outpatientClinics: { budget: 2500000, actual: 2400000 }, labPharmacy: { budget: 3000000, actual: 3100000 } },
+                alerts: [{ id: "ALT-101", type: 'warning', title: 'PM-JAY Claim Denial Spike (5.8%)', desc: 'Pre-authorization delays noted in government portal submissions.', rootCause: "Portal gateway API timeout on state server", person: "RCM Team Lead", resolution: "Manual batch upload executed daily" }]
+            },
+            "Feb": {
+                healthScore: 84, ebitdaMargin: 23.1, daysCashOnHand: 71, grossRevenue: 29200000, netIncome: 5450000, denialRate: 5.2, daysInAR: 42, chairUtilization: 80,
+                machines: { installed: 24, running: 21, maintenance: 3, utilization: 87.5, sessionsToday: 72, revenueToday: 144000, avgDowntime: 9 },
+                risk: { refunds: 72000, appeals: 19, arOutstanding: 2050000, badDebt: 140000, legalProvision: 380000, revenueLeakage: 98000, complianceScore: 90 },
+                roPlant: { status: "Operational", efficiency: "96.8%", maintDue: "9 Days", conductivity: "3.9 µS/cm", chloramine: "0.01 ppm", dailyWater: "19,200 L" },
+                aiAdvisor: { rec: "Renegotiate CGHS dialyzer supply bundle to improve margin by 1.8%.", impact: "₹12 Lakh/year", confidence: 89 },
+                briefing: { points: ["Rebound in elective vascular access surgeries boosted revenue to ₹2.92 Cr.", "TPA workflow automation trimmed AR days from 44 to 42.", "Transplant OT capacity running near 92% occupancy."], action: "Review vendor volume discounts for dialysis consumable supply kits." },
+                revenueSources: { outpatientDialysis: 11200000, inpatientNephrology: 8700000, kidneyTransplant: 5100000, vascularAccessSurgery: 2150000, labDiagnostics: 2050000 },
+                expenses: { clinicalSalaries: 10600000, dialysisConsumables: 4750000, pharmaceuticals: 3250000, facilityUtilities: 1750000, adminDepreciation: 3000000 },
+                payerMix: { privateInsurance: 39, pmjay: 28, cghs: 15, echs: 10, cash: 8 },
+                budgetVariance: { dialysisUnit: { budget: 9500000, actual: 9650000 }, transplantSurg: { budget: 4000000, actual: 4100000 }, icuInpatient: { budget: 6000000, actual: 6050000 }, outpatientClinics: { budget: 2500000, actual: 2450000 }, labPharmacy: { budget: 3000000, actual: 3050000 } },
+                alerts: [{ id: "ALT-103", type: 'success', title: 'ECHS & CGHS AR Days Lowered', desc: 'Days in AR dropped by 2 days following TPA workflow automation.', rootCause: "Digital clearinghouse integration", person: "Finance Controller", resolution: "Standardized across all TPAs" }]
+            },
+            "Mar": {
+                healthScore: 87, ebitdaMargin: 24.5, daysCashOnHand: 75, grossRevenue: 31000000, netIncome: 6100000, denialRate: 4.6, daysInAR: 39, chairUtilization: 85,
+                machines: { installed: 24, running: 22, maintenance: 2, utilization: 91.6, sessionsToday: 78, revenueToday: 156000, avgDowntime: 6 },
+                risk: { refunds: 68000, appeals: 17, arOutstanding: 1900000, badDebt: 130000, legalProvision: 350000, revenueLeakage: 90000, complianceScore: 92 },
+                roPlant: { status: "Operational", efficiency: "97.1%", maintDue: "5 Days", conductivity: "3.5 µS/cm", chloramine: "0.008 ppm", dailyWater: "21,000 L" },
+                aiAdvisor: { rec: "Shift stable maintenance dialysis patients to early evening slots.", impact: "₹16 Lakh/year", confidence: 93 },
+                briefing: { points: ["Financial year-end collections push yielded ₹3.10 Cr Gross Revenue.", "11 Successful living donor kidney transplants completed.", "Budget utilization hit 98% with optimized year-end clinical procurement."], action: "Finalize purchase order for next-gen hemodiafiltration machines." },
+                revenueSources: { outpatientDialysis: 12100000, inpatientNephrology: 9200000, kidneyTransplant: 5500000, vascularAccessSurgery: 2300000, labDiagnostics: 1900000 },
+                expenses: { clinicalSalaries: 10800000, dialysisConsumables: 4900000, pharmaceuticals: 3400000, facilityUtilities: 1800000, adminDepreciation: 3000000 },
+                payerMix: { privateInsurance: 40, pmjay: 27, cghs: 15, echs: 10, cash: 8 },
+                budgetVariance: { dialysisUnit: { budget: 9500000, actual: 9900000 }, transplantSurg: { budget: 4000000, actual: 4300000 }, icuInpatient: { budget: 6000000, actual: 6150000 }, outpatientClinics: { budget: 2500000, actual: 2480000 }, labPharmacy: { budget: 3000000, actual: 2950000 } },
+                alerts: [{ id: "ALT-104", type: 'success', title: 'Transplant Milestone', desc: '11 Successful living donor kidney transplants completed this month.', rootCause: "Surgical team ramp-up", person: "Head of Transplant", resolution: "Capacity expanded" }]
+            },
+            "Apr": {
+                healthScore: 85, ebitdaMargin: 23.8, daysCashOnHand: 74, grossRevenue: 30200000, netIncome: 5800000, denialRate: 4.4, daysInAR: 38, chairUtilization: 83,
+                machines: { installed: 24, running: 21, maintenance: 3, utilization: 87.5, sessionsToday: 74, revenueToday: 148000, avgDowntime: 8 },
+                risk: { refunds: 70000, appeals: 18, arOutstanding: 1880000, badDebt: 125000, legalProvision: 350000, revenueLeakage: 88000, complianceScore: 91 },
+                roPlant: { status: "Operational", efficiency: "96.9%", maintDue: "15 Days", conductivity: "3.8 µS/cm", chloramine: "0.01 ppm", dailyWater: "20,100 L" },
+                aiAdvisor: { rec: "Automate ECHS billing documentation to shave 3 days off AR cycle.", impact: "₹10 Lakh/year", confidence: 90 },
+                briefing: { points: ["Start of Q1 FY27 recorded stable gross revenue of ₹3.02 Cr.", "Claims denial rate successfully stabilized below 4.5% target.", "RO water filtration system completed preventive maintenance cycle."], action: "Expand digital payment gateways to reduce cash handling friction in OPD." },
+                revenueSources: { outpatientDialysis: 11800000, inpatientNephrology: 8900000, kidneyTransplant: 5200000, vascularAccessSurgery: 2250000, labDiagnostics: 2050000 },
+                expenses: { clinicalSalaries: 10750000, dialysisConsumables: 4850000, pharmaceuticals: 3300000, facilityUtilities: 1750000, adminDepreciation: 3000000 },
+                payerMix: { privateInsurance: 40, pmjay: 28, cghs: 14, echs: 10, cash: 8 },
+                budgetVariance: { dialysisUnit: { budget: 9600000, actual: 9750000 }, transplantSurg: { budget: 4100000, actual: 4150000 }, icuInpatient: { budget: 6100000, actual: 6000000 }, outpatientClinics: { budget: 2500000, actual: 2520000 }, labPharmacy: { budget: 3000000, actual: 2980000 } },
+                alerts: [{ id: "ALT-105", type: 'success', title: 'Claim Denials Target Met', desc: 'Denial rate maintained under 4.5% target for second consecutive month.', rootCause: "Pre-billing audit protocol", person: "RCM Quality Manager", resolution: "Standard Operating Procedure updated" }]
+            },
+            "May": {
+                healthScore: 88, ebitdaMargin: 25.1, daysCashOnHand: 78, grossRevenue: 32500000, netIncome: 6600000, denialRate: 4.1, daysInAR: 36, chairUtilization: 88,
+                machines: { installed: 24, running: 22, maintenance: 2, utilization: 91.6, sessionsToday: 82, revenueToday: 164000, avgDowntime: 5 },
+                risk: { refunds: 65000, appeals: 16, arOutstanding: 1820000, badDebt: 120000, legalProvision: 350000, revenueLeakage: 85000, complianceScore: 93 },
+                roPlant: { status: "Operational", efficiency: "97.4%", maintDue: "10 Days", conductivity: "3.2 µS/cm", chloramine: "0.007 ppm", dailyWater: "23,500 L" },
+                aiAdvisor: { rec: "Introduce 4th evening dialysis shift to meet patient waitlist demand.", impact: "₹18 Lakh/year", confidence: 94 },
+                briefing: { points: ["Summer heat wave spiked outpatient acute dialysis sessions.", "Electricity & RO plant operational costs rose due to continuous HVAC load.", "Private insurance share increased to 42%, accelerating cash recovery."], action: "Approve 4th shift trial for hemodialysis unit during peak hours." },
+                revenueSources: { outpatientDialysis: 12800000, inpatientNephrology: 9500000, kidneyTransplant: 5800000, vascularAccessSurgery: 2350000, labDiagnostics: 2050000 },
+                expenses: { clinicalSalaries: 10900000, dialysisConsumables: 5100000, pharmaceuticals: 3500000, facilityUtilities: 1850000, adminDepreciation: 3050000 },
+                payerMix: { privateInsurance: 42, pmjay: 26, cghs: 14, echs: 10, cash: 8 },
+                budgetVariance: { dialysisUnit: { budget: 9800000, actual: 10200000 }, transplantSurg: { budget: 4200000, actual: 4450000 }, icuInpatient: { budget: 6200000, actual: 6250000 }, outpatientClinics: { budget: 2500000, actual: 2450000 }, labPharmacy: { budget: 3100000, actual: 3000000 } },
+                alerts: [{ id: "ALT-106", type: 'warning', title: 'Chair Occupancy Alert', desc: 'Chair utilization at 88%; initiating 4th shift trial.', rootCause: "Heat wave patient surge", person: "Dialysis Nurse In-Charge", resolution: "Evening nursing roster created" }]
+            },
+            "Jun": {
+                healthScore: 89, ebitdaMargin: 25.8, daysCashOnHand: 80, grossRevenue: 33800000, netIncome: 7100000, denialRate: 3.9, daysInAR: 35, chairUtilization: 91,
+                machines: { installed: 24, running: 23, maintenance: 1, utilization: 95.8, sessionsToday: 86, revenueToday: 172000, avgDowntime: 3 },
+                risk: { refunds: 60000, appeals: 14, arOutstanding: 1750000, badDebt: 110000, legalProvision: 320000, revenueLeakage: 80000, complianceScore: 94 },
+                roPlant: { status: "Operational", efficiency: "97.8%", maintDue: "7 Days", conductivity: "3.1 µS/cm", chloramine: "0.005 ppm", dailyWater: "24,800 L" },
+                aiAdvisor: { rec: "Expand HLA tissue typing lab capacity to internalize transplant workup.", impact: "₹22 Lakh/year", confidence: 92 },
+                briefing: { points: ["Net operating income crossed ₹70 Lakh benchmark for the first time.", "Machine utilization reached 95.8% with 23/24 machines online.", "Consumable prices surged slightly due to global supply chain adjustments."], action: "Internalize organ donor HLA crossmatching in-house." },
+                revenueSources: { outpatientDialysis: 13200000, inpatientNephrology: 9900000, kidneyTransplant: 6100000, vascularAccessSurgery: 2450000, labDiagnostics: 2150000 },
+                expenses: { clinicalSalaries: 11100000, dialysisConsumables: 5250000, pharmaceuticals: 3600000, facilityUtilities: 1900000, adminDepreciation: 3050000 },
+                payerMix: { privateInsurance: 43, pmjay: 25, cghs: 14, echs: 10, cash: 8 },
+                budgetVariance: { dialysisUnit: { budget: 10000000, actual: 10400000 }, transplantSurg: { budget: 4300000, actual: 4600000 }, icuInpatient: { budget: 6300000, actual: 6300000 }, outpatientClinics: { budget: 2600000, actual: 2500000 }, labPharmacy: { budget: 3100000, actual: 3080000 } },
+                alerts: [{ id: "ALT-107", type: 'success', title: 'Record Revenue Month', desc: 'Net Operating Income crossed ₹70 Lakh milestone.', rootCause: "High chair occupancy + transplant surgical revenue", person: "CFO", resolution: "Bonus incentive pool allocated" }]
+            },
+            "Jul": {
+                healthScore: 86, ebitdaMargin: 24.0, daysCashOnHand: 76, grossRevenue: 31500000, netIncome: 6000000, denialRate: 4.3, daysInAR: 37, chairUtilization: 84,
+                machines: { installed: 24, running: 21, maintenance: 3, utilization: 87.5, sessionsToday: 76, revenueToday: 152000, avgDowntime: 10 },
+                risk: { refunds: 64000, appeals: 16, arOutstanding: 1800000, badDebt: 115000, legalProvision: 320000, revenueLeakage: 82000, complianceScore: 91 },
+                roPlant: { status: "Operational", efficiency: "97.0%", maintDue: "14 Days", conductivity: "3.6 µS/cm", chloramine: "0.009 ppm", dailyWater: "22,000 L" },
+                aiAdvisor: { rec: "Bulk purchase AV fistula graft kits to capture volume discounts.", impact: "₹8 Lakh/year", confidence: 88 },
+                briefing: { points: ["Monsoon onset increased acute renal failure admissions in ICU.", "RO water filtration system executed routine chemical backwash.", "Government scheme processing speed slowed down temporarily."], action: "Stockpile critical dialysis consumables ahead of monsoon transport disruptions." },
+                revenueSources: { outpatientDialysis: 12300000, inpatientNephrology: 9200000, kidneyTransplant: 5400000, vascularAccessSurgery: 2400000, labDiagnostics: 2200000 },
+                expenses: { clinicalSalaries: 11000000, dialysisConsumables: 5000000, pharmaceuticals: 3450000, facilityUtilities: 2000000, adminDepreciation: 3050000 },
+                payerMix: { privateInsurance: 42, pmjay: 26, cghs: 14, echs: 10, cash: 8 },
+                budgetVariance: { dialysisUnit: { budget: 10000000, actual: 9900000 }, transplantSurg: { budget: 4300000, actual: 4250000 }, icuInpatient: { budget: 6300000, actual: 6200000 }, outpatientClinics: { budget: 2600000, actual: 2550000 }, labPharmacy: { budget: 3100000, actual: 3150000 } },
+                alerts: [{ id: "ALT-108", type: 'info', title: 'RO Plant Membrane Cleaning', desc: 'Routine chemical sanitation executed without procedure downtime.', rootCause: "Scheduled preventive maintenance", person: "Biomedical Engineer", resolution: "Passed endotoxin test" }]
+            },
+            "Aug": {
+                healthScore: 87, ebitdaMargin: 24.8, daysCashOnHand: 79, grossRevenue: 32800000, netIncome: 6700000, denialRate: 4.0, daysInAR: 36, chairUtilization: 86,
+                machines: { installed: 24, running: 22, maintenance: 2, utilization: 91.6, sessionsToday: 80, revenueToday: 160000, avgDowntime: 5 },
+                risk: { refunds: 62000, appeals: 15, arOutstanding: 1780000, badDebt: 110000, legalProvision: 300000, revenueLeakage: 79000, complianceScore: 92 },
+                roPlant: { status: "Operational", efficiency: "97.2%", maintDue: "11 Days", conductivity: "3.4 µS/cm", chloramine: "0.008 ppm", dailyWater: "22,900 L" },
+                aiAdvisor: { rec: "Scale Home Peritoneal Dialysis (PD) training program to ease chair bottleneck.", impact: "₹15 Lakh/year", confidence: 93 },
+                briefing: { points: ["PM-JAY reimbursement delays temporarily elevated outstanding AR.", "Home Peritoneal Dialysis (PD) program enrolled 14 new patients.", "Gross Revenue rebounded strongly to ₹3.28 Cr."], action: "Escalate pending government scheme bills with regional nodal officer." },
+                revenueSources: { outpatientDialysis: 12900000, inpatientNephrology: 9600000, kidneyTransplant: 5700000, vascularAccessSurgery: 2400000, labDiagnostics: 2200000 },
+                expenses: { clinicalSalaries: 11100000, dialysisConsumables: 5150000, pharmaceuticals: 3500000, facilityUtilities: 1950000, adminDepreciation: 3100000 },
+                payerMix: { privateInsurance: 42, pmjay: 26, cghs: 14, echs: 10, cash: 8 },
+                budgetVariance: { dialysisUnit: { budget: 10000000, actual: 10150000 }, transplantSurg: { budget: 4300000, actual: 4400000 }, icuInpatient: { budget: 6300000, actual: 6350000 }, outpatientClinics: { budget: 2600000, actual: 2580000 }, labPharmacy: { budget: 3100000, actual: 3120000 } },
+                alerts: [{ id: "ALT-109", type: 'success', title: 'Home Peritoneal Dialysis Growth', desc: '14 New patients transitioned to Home PD, reducing in-center pressure.', rootCause: "Patient education drive", person: "Home PD Coordinator", resolution: "Inventory auto-replenishment setup" }]
+            },
+            "Sep": {
+                healthScore: 88, ebitdaMargin: 25.0, daysCashOnHand: 81, grossRevenue: 33200000, netIncome: 6900000, denialRate: 3.8, daysInAR: 34, chairUtilization: 89,
+                machines: { installed: 24, running: 22, maintenance: 2, utilization: 91.6, sessionsToday: 81, revenueToday: 162000, avgDowntime: 4 },
+                risk: { refunds: 58000, appeals: 14, arOutstanding: 1700000, badDebt: 105000, legalProvision: 300000, revenueLeakage: 75000, complianceScore: 94 },
+                roPlant: { status: "Operational", efficiency: "97.5%", maintDue: "8 Days", conductivity: "3.2 µS/cm", chloramine: "0.006 ppm", dailyWater: "23,800 L" },
+                aiAdvisor: { rec: "Integrate automated PM-JAY claim tracking module to lower AR days.", impact: "₹11 Lakh/year", confidence: 92 },
+                briefing: { points: ["Days in AR dropped to a 12-month low of 34 days.", "Outpatient nephrology consultations expanded by 7.4% MoM.", "Claim denial rate reduced to 3.8%."], action: "Implement automated eligibility checks at front desk admission." },
+                revenueSources: { outpatientDialysis: 13100000, inpatientNephrology: 9700000, kidneyTransplant: 5900000, vascularAccessSurgery: 2300000, labDiagnostics: 2200000 },
+                expenses: { clinicalSalaries: 11200000, dialysisConsumables: 5200000, pharmaceuticals: 3550000, facilityUtilities: 1850000, adminDepreciation: 3100000 },
+                payerMix: { privateInsurance: 43, pmjay: 25, cghs: 14, echs: 10, cash: 8 },
+                budgetVariance: { dialysisUnit: { budget: 10200000, actual: 10300000 }, transplantSurg: { budget: 4400000, actual: 4500000 }, icuInpatient: { budget: 6300000, actual: 6320000 }, outpatientClinics: { budget: 2600000, actual: 2540000 }, labPharmacy: { budget: 3100000, actual: 3090000 } },
+                alerts: [{ id: "ALT-110", type: 'success', title: 'AR Cycle Acceleration', desc: 'Days in AR improved to 34 days, setting YTD benchmark.', rootCause: "Automated claims scrubbing engine", person: "RCM Lead", resolution: "Continued portal integration" }]
+            },
+            "Oct": {
+                healthScore: 90, ebitdaMargin: 26.2, daysCashOnHand: 84, grossRevenue: 34500000, netIncome: 7400000, denialRate: 3.6, daysInAR: 33, chairUtilization: 92,
+                machines: { installed: 24, running: 22, maintenance: 2, utilization: 91.6, sessionsToday: 84, revenueToday: 168000, avgDowntime: 4 },
+                risk: { refunds: 65000, appeals: 16, arOutstanding: 1820000, badDebt: 120000, legalProvision: 350000, revenueLeakage: 85000, complianceScore: 95 },
+                roPlant: { status: "Operational", efficiency: "97.4%", maintDue: "6 Days", conductivity: "3.1 µS/cm", chloramine: "0.005 ppm", dailyWater: "24,500 L" },
+                aiAdvisor: { rec: "Increase dialysis sessions during evening shifts (4th shift trial).", impact: "₹18 Lakh/year", confidence: 94 },
+                briefing: { points: ["Gross revenue increased by 6.4% over September to reach ₹3.45 Cr.", "Claims denial rate reduced to 3.6%.", "Dialysis machine utilization reached 91.6%.", "Budget utilization remained within target.", "AI recommends adding a fourth evening dialysis shift due to sustained high chair occupancy."], action: "Approve 4th shift dialysis staffing budget." },
+                revenueSources: { outpatientDialysis: 13600000, inpatientNephrology: 10100000, kidneyTransplant: 6200000, vascularAccessSurgery: 2400000, labDiagnostics: 2200000 },
+                expenses: { clinicalSalaries: 11300000, dialysisConsumables: 5350000, pharmaceuticals: 3650000, facilityUtilities: 1800000, adminDepreciation: 3100000 },
+                payerMix: { privateInsurance: 44, pmjay: 25, cghs: 13, echs: 10, cash: 8 },
+                budgetVariance: { dialysisUnit: { budget: 10200000, actual: 10550000 }, transplantSurg: { budget: 4400000, actual: 4680000 }, icuInpatient: { budget: 6400000, actual: 6420000 }, outpatientClinics: { budget: 2600000, actual: 2580000 }, labPharmacy: { budget: 3200000, actual: 3150000 } },
+                alerts: [{ id: "ALT-111", type: 'success', title: 'Top Financial Index Rating', desc: 'Overall Financial Health Score achieved 90/100 benchmark.', rootCause: "Sustained clinical volume + low denials", person: "CFO", resolution: "Board presentation prepared" }, { id: "ALT-112", type: 'warning', title: 'Renal ICU Nurse Overtime', desc: 'High ICU census required additional specialized nephro-nursing staff.', rootCause: "Complex transplant recovery patients", person: "Nursing Supt.", resolution: "Contract nurse pool activated" }]
+            },
+            "Nov": {
+                healthScore: 89, ebitdaMargin: 25.5, daysCashOnHand: 83, grossRevenue: 33900000, netIncome: 7150000, denialRate: 3.7, daysInAR: 34, chairUtilization: 90,
+                machines: { installed: 24, running: 22, maintenance: 2, utilization: 91.6, sessionsToday: 82, revenueToday: 164000, avgDowntime: 5 },
+                risk: { refunds: 61000, appeals: 15, arOutstanding: 1790000, badDebt: 115000, legalProvision: 340000, revenueLeakage: 78000, complianceScore: 94 },
+                roPlant: { status: "Operational", efficiency: "97.3%", maintDue: "10 Days", conductivity: "3.3 µS/cm", chloramine: "0.007 ppm", dailyWater: "23,900 L" },
+                aiAdvisor: { rec: "Procure high-flux dialyzers via central hospital syndicate to save 3%.", impact: "₹13 Lakh/year", confidence: 90 },
+                briefing: { points: ["Festive season slowdown slightly tempered surgical volumes.", "Re-negotiated dialyzer supply contracts reduced per-session consumable costs.", "EBITDA margin maintained strongly at 25.5%."], action: "Finalize annual volume rebates with domestic dialyzer manufacturers." },
+                revenueSources: { outpatientDialysis: 13400000, inpatientNephrology: 9900000, kidneyTransplant: 6000000, vascularAccessSurgery: 2400000, labDiagnostics: 2200000 },
+                expenses: { clinicalSalaries: 11250000, dialysisConsumables: 5300000, pharmaceuticals: 3600000, facilityUtilities: 1800000, adminDepreciation: 3100000 },
+                payerMix: { privateInsurance: 44, pmjay: 25, cghs: 13, echs: 10, cash: 8 },
+                budgetVariance: { dialysisUnit: { budget: 10200000, actual: 10400000 }, transplantSurg: { budget: 4400000, actual: 4520000 }, icuInpatient: { budget: 6400000, actual: 6380000 }, outpatientClinics: { budget: 2600000, actual: 2590000 }, labPharmacy: { budget: 3200000, actual: 3180000 } },
+                alerts: [{ id: "ALT-113", type: 'info', title: 'Vendor Contract Review', desc: 'Re-negotiating dialyzer volume rates with domestic manufacturers.', rootCause: "Annual contract renewal", person: "Procurement Lead", resolution: "Contract draft ready" }]
+            },
+            "Dec": {
+                healthScore: 91, ebitdaMargin: 26.5, daysCashOnHand: 86, grossRevenue: 35200000, netIncome: 7650000, denialRate: 3.5, daysInAR: 32, chairUtilization: 94,
+                machines: { installed: 24, running: 23, maintenance: 1, utilization: 95.8, sessionsToday: 88, revenueToday: 176000, avgDowntime: 2 },
+                risk: { refunds: 55000, appeals: 12, arOutstanding: 1650000, badDebt: 100000, legalProvision: 300000, revenueLeakage: 70000, complianceScore: 96 },
+                roPlant: { status: "Operational", efficiency: "98.1%", maintDue: "18 Days", conductivity: "2.9 µS/cm", chloramine: "0.004 ppm", dailyWater: "25,200 L" },
+                aiAdvisor: { rec: "Maintain high-flux dialyzer reuse protocol under NABH guidelines.", impact: "₹20 Lakh/year", confidence: 95 },
+                briefing: { points: ["Achieved highest annual Financial Health Score (91/100).", "Surpassed annual gross operating targets by 4.2% (₹3.52 Cr in Dec).", "Claim denial rate dropped to an all-time low of 3.5%."], action: "Reallocate year-end operational surplus into CapEx expansion reserve." },
+                revenueSources: { outpatientDialysis: 13900000, inpatientNephrology: 10300000, kidneyTransplant: 6400000, vascularAccessSurgery: 2400000, labDiagnostics: 2200000 },
+                expenses: { clinicalSalaries: 11400000, dialysisConsumables: 5400000, pharmaceuticals: 3700000, facilityUtilities: 1850000, adminDepreciation: 3100000 },
+                payerMix: { privateInsurance: 45, pmjay: 24, cghs: 13, echs: 10, cash: 8 },
+                budgetVariance: { dialysisUnit: { budget: 10300000, actual: 10600000 }, transplantSurg: { budget: 4500000, actual: 4750000 }, icuInpatient: { budget: 6400000, actual: 6450000 }, outpatientClinics: { budget: 2600000, actual: 2550000 }, labPharmacy: { budget: 3200000, actual: 3160000 } },
+                alerts: [{ id: "ALT-114", type: 'success', title: 'Annual Target Exceeded', desc: 'Annual Gross Operating Target surpassed by 4.2%.', rootCause: "Optimized RCM and clinical chair throughput", person: "CFO", resolution: "Executive dividend approved" }]
+            }
+        };
+
+        const capexData = [
+            { name: "Hemodiafiltration Machines (x20 Units)", category: "Dialysis Hardware", budgeted: 12000000, spent: 12000000, progress: 100, roi: "22.5%", status: "Completed" },
+            { name: "Renal ICU Isolation Ward Expansion (8 Beds)", category: "Infrastructure", budgeted: 18000000, spent: 15500000, progress: 86, roi: "18.2%", status: "In Progress" },
+            { name: "CRRT Critical Care Units (x4 Systems)", category: "Critical Care", budgeted: 6500000, spent: 6500000, progress: 100, roi: "24.0%", status: "Completed" },
+            { name: "HLA Tissue Typing Lab Automation", category: "Transplant Lab", budgeted: 7000000, spent: 4800000, progress: 68, roi: "15.8%", status: "In Progress" },
+            { name: "Double Pass RO Water Plant Duplication", category: "Facility & Safety", budgeted: 5000000, spent: 4700000, progress: 94, roi: "NABH Mandatory", status: "Near Completion" }
+        ];
+
+        const kpiDefinitions = {
+            "Financial Health Score": {
+                def: "A composite 100-point index evaluating hospital solvency, operating margin, collection cycle efficiency, and claim realization.",
+                formula: "(0.3 × EBITDA%) + (0.25 × Days Cash / 100) + (0.25 × [1 - Days AR/60]) + (0.2 × Realization%)",
+                benchmark: "80.0 / 100",
+                target: "85.0+ / 100",
+                biz: "Directly determines creditworthiness, bank borrowing rates for CapEx, and operational sustainability.",
+                clin: "Ensures uninterrupted cash flow for dialysis consumables, organ transplant tissue media, and emergency ICU staffing."
+            },
+            "Gross Revenue": {
+                def: "Total gross billed clinical and diagnostic revenue generated before contractual allowances, scheme discounts, and uncollected claims.",
+                formula: "Sum of Outpatient + Inpatient + Surgical + Diagnostic Billed Charges",
+                benchmark: "₹3.10 Cr / Mo",
+                target: "₹3.25 Cr / Mo",
+                biz: "Reflects overall hospital top-line clinical demand and market share.",
+                clin: "Indicates volume capacity utilization across hemodialysis, transplants, and ICU beds."
+            },
+            "EBITDA": {
+                def: "Earnings Before Interest, Taxes, Depreciation, and Amortization, measuring operational clinical profitability.",
+                formula: "(Total Operating Revenue - Operating Expenses) / Total Operating Revenue × 100",
+                benchmark: "21.0%",
+                target: "25.0%+",
+                biz: "Core indicator of hospital cash-generating capability independent of debt financing and capital structure.",
+                clin: "Provides reinvestment capital for bio-medical equipment replacement and high-flux dialyzer upgrades."
+            },
+            "Days in AR": {
+                def: "The average number of days required to collect payments from patients, commercial insurance TPAs, and PM-JAY/CGHS schemes.",
+                formula: "(Accounts Receivable Balance / Total Gross Credit Sales) × 365 Days",
+                benchmark: "45 Days",
+                target: "< 38 Days",
+                biz: "Shorter AR cycles maximize working capital availability and lower bad debt provisions.",
+                clin: "Prevents supply chain bottlenecks with vendors supplying continuous renal replacement therapy (CRRT) fluids."
+            },
+            "Claims Denial Rate": {
+                def: "The percentage of claims submitted to government schemes and commercial TPAs that are initially rejected or un-authorized.",
+                formula: "(Total Dollar Value of Denied Claims / Total Value of Submitted Claims) × 100",
+                benchmark: "6.2%",
+                target: "< 4.5%",
+                biz: "Directly prevents revenue leakage and eliminates redundant administrative appeal labor costs.",
+                clin: "Ensures seamless pre-authorization clearance prior to patient admission for vascular access or kidney transplants."
+            },
+            "Machine Utilization": {
+                def: "The proportion of total hemodialysis machine capacity actively deployed across scheduled patient treatment shifts.",
+                formula: "(Actual Dialysis Sessions Executed / Maximum Designed Chair Shift Capacity) × 100",
+                benchmark: "78.0%",
+                target: "88.0%+",
+                biz: "Maximizes fixed asset yield on high-cost bio-medical capital equipment.",
+                clin: "Reduces patient waitlist times and ensures emergency dialyzer chair availability for acute renal cases."
+            },
+            "Chair Occupancy": {
+                def: "The percentage of outpatient dialysis chairs occupied during active shift operation.",
+                formula: "(Occupied Chairs / Total Installed Dialysis Chairs) × 100",
+                benchmark: "80.0%",
+                target: "90.0%+",
+                biz: "Directly drives outpatient hemodialysis volume and consumable turnover.",
+                clin: "Optimizes nurse-to-patient ratios and maintains strict infection control spacing."
+            }
+        };
+
+        const machineFleet = [
+            { id: "HD-M01", vendor: "Fresenius 5008S", cost: "₹14.5 Lakh", status: "Running", sessions: 4, rev: "₹8,000", util: "95%", downtime: "0 hrs", amc: "Active (2027)", pmDue: "14 Days" },
+            { id: "HD-M02", vendor: "Fresenius 5008S", cost: "₹14.5 Lakh", status: "Running", sessions: 4, rev: "₹8,000", util: "95%", downtime: "0 hrs", amc: "Active (2027)", pmDue: "18 Days" },
+            { id: "HD-M03", vendor: "Baxter Gambro AK98", cost: "₹13.2 Lakh", status: "Running", sessions: 3, rev: "₹6,000", util: "82%", downtime: "1.5 hrs", amc: "Active (2026)", pmDue: "5 Days" },
+            { id: "HD-M04", vendor: "Nipro Surdial X", cost: "₹12.8 Lakh", status: "Maintenance", sessions: 0, rev: "₹0", util: "0%", downtime: "24 hrs", amc: "Under Warranty", pmDue: "In Progress" },
+            { id: "HD-M05", vendor: "Fresenius 5008S", cost: "₹14.5 Lakh", status: "Running", sessions: 4, rev: "₹8,000", util: "96%", downtime: "0 hrs", amc: "Active (2027)", pmDue: "22 Days" }
+        ];
+
+        const notificationData = [
+            { title: "Claim Approved", desc: "PM-JAY Claim #78214 (₹1.45 Lakh) approved by nodal agency.", time: "10 mins ago", icon: "check-circle-2", color: "text-emerald-500" },
+            { title: "Machine Maintenance Due", desc: "Unit HD-M04 due for bi-monthly filter calibration.", time: "45 mins ago", icon: "alert-triangle", color: "text-amber-500" },
+            { title: "Refund Processed", desc: "Patient #PT-9042 refund of ₹12,500 credited to source account.", time: "2 hours ago", icon: "rotate-ccw", color: "text-blue-500" },
+            { title: "RO Plant Filter Audit", desc: "Water endotoxin audit cleared (<0.003 EU/ml).", time: "4 hours ago", icon: "droplets", color: "text-teal-500" },
+            { title: "Budget Variance Alert", desc: "Transplant OT consumables spending reached 94% of monthly cap.", time: "Yesterday", icon: "file-text", color: "text-rose-500" }
+        ];
+
+        let revenueChart, costChart, payerChart, budgetChart, forecastChart;
+        let presentationInterval = null;
+
+        // -------------------------------------------------------------
+        // 2. INITIALIZATION & SHORTCUT LISTENERS
+        // -------------------------------------------------------------
+        window.addEventListener('DOMContentLoaded', () => {
+            startLiveClock();
+            setupKeyboardShortcuts();
+            populateMonthDropdown();
+            renderCapexTable();
+            renderNotifications();
+            initCharts();
+            initForecastChart();
+            updateDashboard(currentMonth);
+        });
+
+        // -------------------------------------------------------------
+        // 3. ENTERPRISE LOGIN & ROLE-BASED ACCESS CONTROL
+        // -------------------------------------------------------------
+        function handlePortalLogin(e) {
+            e.preventDefault();
+            userRole = document.getElementById('loginRole').value;
+            
+            document.getElementById('loginPortal').classList.add('hidden');
+            const loadingScreen = document.getElementById('loginLoadingScreen');
+            loadingScreen.classList.remove('hidden');
+
+            const progressBar = document.getElementById('loginProgressBar');
+            const pctText = document.getElementById('loginProgressPct');
+            let pct = 0;
+
+            const interval = setInterval(() => {
+                pct += 20;
+                progressBar.style.width = pct + '%';
+                pctText.textContent = pct + '%';
+
+                if (pct >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loadingScreen.classList.add('hidden');
+                        applyRolePermissions(userRole);
+                    }, 300);
+                }
+            }, 300);
+        }
+
+        function showLoginPortal() {
+            document.getElementById('loginPortal').classList.remove('hidden');
+        }
+
+        function applyRolePermissions(role) {
+            document.getElementById('navRoleBadge').textContent = `Role: ${role}`;
+
+            const allSections = ['sec-syshealth', 'sec-operations', 'sec-scorecard', 'sec-overview', 'sec-alerts', 'sec-aiadvisor', 'sec-kpis', 'sec-machines', 'sec-risks', 'sec-roplant', 'sec-benchmarks', 'sec-revenue', 'sec-cost', 'sec-leakage', 'sec-claims', 'sec-budget', 'sec-forecast', 'sec-timeline', 'sec-compliance', 'sec-decisionlog', 'sec-capex'];
+
+            allSections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('hidden');
+            });
+
+            if (role === 'CEO') {
+                ['sec-machines', 'sec-roplant', 'sec-compliance', 'sec-capex'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+            } else if (role === 'Medical Director') {
+                ['sec-claims', 'sec-budget', 'sec-leakage', 'sec-risks', 'sec-capex'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+            } else if (role === 'Finance Manager') {
+                ['sec-operations', 'sec-compliance', 'sec-roplant'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+            } else if (role === 'Quality Head') {
+                ['sec-revenue', 'sec-cost', 'sec-claims', 'sec-budget', 'sec-capex'].forEach(id => document.getElementById(id)?.classList.add('hidden'));
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 4. LIVE CLOCK & SYSTEM HEALTH
+        // -------------------------------------------------------------
+        function startLiveClock() {
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById('liveDateText').textContent = now.toLocaleDateString('en-IN', { weekday: 'short', day: '2-digit', month: 'short', year: 'numeric' });
+                document.getElementById('liveTimeText').textContent = now.toLocaleTimeString('en-IN', { hour12: true });
+            }, 1000);
+        }
+
+        // -------------------------------------------------------------
+        // 5. DARK MODE & KEYBOARD SHORTCUTS
+        // -------------------------------------------------------------
+        function toggleDarkMode() {
+            const html = document.getElementById('htmlRoot');
+            const icon = document.getElementById('darkModeIcon');
+            html.classList.toggle('dark');
+
+            if (html.classList.contains('dark')) {
+                icon.setAttribute('data-lucide', 'sun');
+            } else {
+                icon.setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+        }
+
+        function setupKeyboardShortcuts() {
+            window.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key.toLowerCase() === 'f') {
+                    e.preventDefault();
+                    document.getElementById('hisSearchInput').focus();
+                } else if (e.key === 'Escape') {
+                    closeDrilldownModal();
+                    closeScenarioSimulator();
+                    closeKpiDefinitionModal();
+                    closeExecutiveReportGenerator();
+                    closeBoardMeetingMode();
+                    closeExecutiveBriefing();
+                } else if (e.key === 'ArrowLeft') {
+                    const idx = months.indexOf(currentMonth);
+                    if (idx > 0) {
+                        currentMonth = months[idx - 1];
+                        document.getElementById('monthSelect').value = currentMonth;
+                        updateDashboard(currentMonth);
+                    }
+                } else if (e.key === 'ArrowRight') {
+                    const idx = months.indexOf(currentMonth);
+                    if (idx < months.length - 1) {
+                        currentMonth = months[idx + 1];
+                        document.getElementById('monthSelect').value = currentMonth;
+                        updateDashboard(currentMonth);
+                    }
+                } else if (e.ctrlKey && e.key.toLowerCase() === 'p') {
+                    e.preventDefault();
+                    togglePresentationMode();
+                }
+            });
+        }
+
+        // -------------------------------------------------------------
+        // 6. DASHBOARD CONTROLLER & SCORECARD REFRESH
+        // -------------------------------------------------------------
+        function populateMonthDropdown() {
+            const select = document.getElementById('monthSelect');
+            select.innerHTML = '';
+            
+            Object.keys(financialData).forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = `${m} 2026`;
+                opt.className = "bg-white text-slate-900";
+                if (m === currentMonth) opt.selected = true;
+                select.appendChild(opt);
+            });
+
+            select.onchange = (e) => {
+                currentMonth = e.target.value;
+                updateDashboard(currentMonth);
+            };
+        }
+
+        function updateDashboard(month) {
+            currentMonth = month;
+            const data = financialData[month];
+            const prevMonthIndex = months.indexOf(month) - 1;
+            const prevData = prevMonthIndex >= 0 ? financialData[months[prevMonthIndex]] : data;
+
+            updateGauge(data.healthScore);
+            document.getElementById('ebitdaMargin').textContent = `${data.ebitdaMargin}%`;
+            document.getElementById('daysCashOnHand').textContent = `${data.daysCashOnHand} Days`;
+
+            // Update Scorecard Values
+            document.getElementById('scFinancial').textContent = data.healthScore;
+            const opScore = Math.round((data.machines.utilization + data.chairUtilization) / 2);
+            document.getElementById('scOperational').textContent = opScore;
+            const rcmScore = Math.round(100 - (data.denialRate * 2));
+            document.getElementById('scRcm').textContent = rcmScore;
+            document.getElementById('scClinical').textContent = data.risk.complianceScore;
+            document.getElementById('scAsset').textContent = Math.round(data.machines.utilization);
+            const overallScore = Math.round((data.healthScore + opScore + rcmScore + data.risk.complianceScore + data.machines.utilization) / 5);
+            document.getElementById('scOverall').textContent = overallScore;
+
+            // Chatbot Context Dynamic Label
+            const chatMonthLbl = document.getElementById('chatMonthLabel');
+            if (chatMonthLbl) chatMonthLbl.textContent = `${month} 2026 Data`;
+
+            // Live Operational telemetry updates based on selected month
+            document.getElementById('liveChairs').textContent = `${Math.round(24 * (data.chairUtilization / 100))} / 24`;
+            document.getElementById('liveMachines').textContent = `${data.machines.running}`;
+
+            // Key KPIs
+            animateCounter('kpiGrossRev', data.grossRevenue, formatINR);
+            setTrend('kpiGrossRevTrend', ((data.grossRevenue - prevData.grossRevenue) / prevData.grossRevenue * 100).toFixed(1), true);
+
+            animateCounter('kpiNetInc', data.netIncome, formatINR);
+            setTrend('kpiNetIncTrend', ((data.netIncome - prevData.netIncome) / prevData.netIncome * 100).toFixed(1), true);
+
+            document.getElementById('kpiDenialRate').textContent = `${data.denialRate}%`;
+            setTrend('kpiDenialTrend', (data.denialRate - prevData.denialRate).toFixed(1), false);
+
+            document.getElementById('kpiDaysAR').textContent = `${data.daysInAR} Days`;
+            setTrend('kpiARTrend', (data.daysInAR - prevData.daysInAR), false);
+
+            document.getElementById('kpiChairUtil').textContent = `${data.chairUtilization}%`;
+            setTrend('kpiChairTrend', (data.chairUtilization - prevData.chairUtilization).toFixed(1), true);
+
+            // Risk Monitor
+            document.getElementById('riskRefunds').textContent = formatINR(data.risk.refunds);
+            document.getElementById('riskAppeals').textContent = `${data.risk.appeals} Cases`;
+            document.getElementById('riskAR').textContent = formatINR(data.risk.arOutstanding);
+            document.getElementById('riskBadDebt').textContent = formatINR(data.risk.badDebt);
+            document.getElementById('riskLegal').textContent = formatINR(data.risk.legalProvision);
+            document.getElementById('riskLeakage').textContent = formatINR(data.risk.revenueLeakage);
+
+            // Dialysis Fleet Status
+            document.getElementById('machInstalled').textContent = data.machines.installed;
+            document.getElementById('machRunning').textContent = data.machines.running;
+            document.getElementById('machMaint').textContent = data.machines.maintenance;
+            document.getElementById('machUtil').textContent = `${data.machines.utilization}%`;
+            document.getElementById('machLoadText').textContent = `${data.machines.utilization}% Operational`;
+            document.getElementById('machProgressBar').style.width = `${data.machines.utilization}%`;
+
+            // RO Water Purification System
+            document.getElementById('roStatus').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span> ${data.roPlant.status}`;
+            document.getElementById('roEfficiency').textContent = data.roPlant.efficiency;
+            document.getElementById('roMaintDue').textContent = data.roPlant.maintDue;
+
+            // AI Financial Advisor
+            document.getElementById('aiRecText').textContent = data.aiAdvisor.rec;
+            document.getElementById('aiImpactValue').textContent = data.aiAdvisor.impact;
+            document.getElementById('aiConfidenceBar').style.width = `${data.aiAdvisor.confidence}%`;
+            document.getElementById('aiConfidenceText').textContent = `${data.aiAdvisor.confidence}%`;
+
+            // Refresh dynamic sub-views & components
+            updateAlerts(data.alerts);
+            updateRevenueChart(data.revenueSources);
+            updateCostChart(data.expenses);
+            updatePayerChart(data.payerMix);
+            updateBudgetChart(data.budgetVariance);
+            renderLeakageHeatmap();
+            renderBenchmarks();
+            renderTimelineGrid();
+            renderNabhProgress();
+            renderEsgMetrics();
+            renderDecisionRegister();
+
+            // Refresh active modals if open
+            if (!document.getElementById('scenarioSimulatorModal').classList.contains('hidden')) {
+                runSimulation();
+            }
+        }
+
+        function animateCounter(id, targetVal, formatter) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const duration = 400;
+            const startTime = performance.now();
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const currentVal = Math.floor(progress * targetVal);
+                el.textContent = formatter ? formatter(currentVal) : currentVal;
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
+
+        function setTrend(elementId, value, higherIsBetter) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const isPositive = parseFloat(value) >= 0;
+            const isGood = higherIsBetter ? isPositive : !isPositive;
+            const colorClass = isGood ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
+            const iconName = isPositive ? 'trending-up' : 'trending-down';
+            el.className = `font-semibold flex items-center ${colorClass}`;
+            el.innerHTML = `<i data-lucide="${iconName}" class="w-3.5 h-3.5 mr-0.5"></i> ${Math.abs(value)}${elementId.includes('Rate') || elementId.includes('Chair') || elementId.includes('Rev') || elementId.includes('Inc') ? '%' : ''}`;
+            lucide.createIcons();
+        }
+
+        function updateGauge(score) {
+            const circle = document.getElementById('gaugeArc');
+            const scoreText = document.getElementById('healthScoreValue');
+            const badge = document.getElementById('healthBadge');
+            if (!circle || !scoreText || !badge) return;
+            circle.setAttribute('stroke-dasharray', `${score}, 100`);
+            scoreText.textContent = score;
+            if (score >= 88) {
+                circle.setAttribute('class', 'text-teal-600 dark:text-teal-400 gauge-circle');
+                badge.className = 'text-xs font-semibold px-2.5 py-0.5 rounded-full bg-teal-100 dark:bg-teal-950 text-teal-800 dark:text-teal-300';
+                badge.textContent = 'Excellent';
+            } else {
+                circle.setAttribute('class', 'text-blue-600 dark:text-blue-400 gauge-circle');
+                badge.className = 'text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300';
+                badge.textContent = 'Strong';
+            }
+        }
+
+        function updateAlerts(alerts) {
+            const container = document.getElementById('alertsList');
+            if (!container) return;
+            container.innerHTML = '';
+            if (!alerts || alerts.length === 0) {
+                container.innerHTML = '<p class="text-xs text-slate-400 py-2">No critical alerts for this month.</p>';
+                return;
+            }
+            alerts.forEach(alert => {
+                const div = document.createElement('div');
+                div.className = `p-2.5 rounded-lg border bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800 flex items-start space-x-2.5 cursor-pointer hover:shadow-sm`;
+                div.onclick = () => openIncidentModal(alert);
+                div.innerHTML = `
+                    <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0"></i>
+                    <div class="flex-1">
+                        <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 flex justify-between items-center">
+                            <span>${alert.title}</span><span class="text-[9px] text-teal-600 dark:text-teal-400 underline">Log</span>
+                        </h4>
+                        <p class="text-[11px] text-slate-600 dark:text-slate-400 leading-snug">${alert.desc}</p>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        // -------------------------------------------------------------
+        // 7. EXECUTIVE KPI DEFINITIONS MODAL
+        // -------------------------------------------------------------
+        function openKpiDefinitionModal(kpiName) {
+            const info = kpiDefinitions[kpiName];
+            if (!info) return;
+
+            document.getElementById('defKpiTitle').textContent = `KPI Definition: ${kpiName}`;
+            document.getElementById('defText').textContent = info.def;
+            document.getElementById('defFormula').textContent = info.formula;
+            document.getElementById('defBenchmark').textContent = info.benchmark;
+            document.getElementById('defTarget').textContent = info.target;
+            document.getElementById('defBizImpact').textContent = info.biz;
+            document.getElementById('defClinImpact').textContent = info.clin;
+
+            document.getElementById('kpiDefinitionModal').classList.remove('hidden');
+        }
+
+        function closeKpiDefinitionModal() {
+            document.getElementById('kpiDefinitionModal').classList.add('hidden');
+        }
+
+        // -------------------------------------------------------------
+        // 8. EXECUTIVE REPORT GENERATOR
+        // -------------------------------------------------------------
+        function openExecutiveReportGenerator() {
+            showLoading("Fetching Revenue Cycle & Compiling Executive Report...");
+            setTimeout(() => {
+                hideLoading();
+                const data = financialData[currentMonth];
+                document.getElementById('reportHeaderSubtitle').textContent = `KidneyCare Super Specialty Hospital & Institute - ${currentMonth} 2026 Executive Performance Audit`;
+
+                document.getElementById('executiveReportContent').innerHTML = `
+                    <div class="space-y-4">
+                        <div class="p-3.5 bg-slate-900 text-white rounded-xl flex justify-between items-center">
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Monthly CFO Executive Briefing & Audit Summary</h4>
+                                <p class="text-[11px] text-teal-400">Reporting Period: ${currentMonth} 2026</p>
+                            </div>
+                            <span class="text-xs font-bold px-3 py-1 bg-emerald-600 rounded-full">Health Index: ${data.healthScore}/100</span>
+                        </div>
+
+                        <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <h5 class="font-bold text-slate-800 dark:text-slate-200 border-b pb-1 mb-2">1. Executive Financial Narrative</h5>
+                            <p class="leading-relaxed text-slate-700 dark:text-slate-300">${data.briefing.points.join(' ')}</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                            <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded border"><span class="text-slate-500 block">Gross Revenue</span><strong class="text-slate-900 dark:text-white font-black">${formatINR(data.grossRevenue)}</strong></div>
+                            <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded border"><span class="text-slate-500 block">Net Profit</span><strong class="text-teal-700 dark:text-teal-400 font-black">${formatINR(data.netIncome)}</strong></div>
+                            <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded border"><span class="text-slate-500 block">Claims Denial Rate</span><strong class="text-rose-600 dark:text-rose-400 font-black">${data.denialRate}%</strong></div>
+                            <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded border"><span class="text-slate-500 block">Days in AR</span><strong class="text-amber-600 dark:text-amber-400 font-black">${data.daysInAR} Days</strong></div>
+                        </div>
+
+                        <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
+                            <h5 class="font-bold text-slate-800 dark:text-slate-200 border-b pb-1 mb-2">2. Capital Investment & RCM Risk Exposure</h5>
+                            <p>Active Outstanding Accounts Receivable: <strong>${formatINR(data.risk.arOutstanding)}</strong> across PM-JAY and Private TPAs. Legal settlement reserve maintained at <strong>${formatINR(data.risk.legalProvision)}</strong>.</p>
+                        </div>
+
+                        <div class="p-3 bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 rounded-xl text-indigo-950 dark:text-indigo-200">
+                            <h5 class="font-bold border-b border-indigo-200 dark:border-indigo-800 pb-1 mb-2">3. Strategic AI Advisory Recommendation</h5>
+                            <p class="font-semibold">${data.aiAdvisor.rec}</p>
+                            <p class="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold mt-1">Projected Annual EBITDA Upside: ${data.aiAdvisor.impact}</p>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('executiveReportModal').classList.remove('hidden');
+            }, 300);
+        }
+
+        function closeExecutiveReportGenerator() {
+            document.getElementById('executiveReportModal').classList.add('hidden');
+        }
+
+        function showLoading(msg) {
+            document.getElementById('generalLoadingText').textContent = msg || "Loading Hospital Analytics...";
+            document.getElementById('generalLoadingOverlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('generalLoadingOverlay').classList.add('hidden');
+        }
+
+        // -------------------------------------------------------------
+        // 9. SCENARIO SIMULATOR ENGINE
+        // -------------------------------------------------------------
+        function openScenarioSimulator() {
+            document.getElementById('simCharge').value = 0;
+            document.getElementById('simOpd').value = 0;
+            document.getElementById('simMach').value = 0;
+            document.getElementById('simDenial').value = 0;
+            document.getElementById('simAr').value = 0;
+            document.getElementById('sim4thShift').value = "0";
+
+            runSimulation();
+            document.getElementById('scenarioSimulatorModal').classList.remove('hidden');
+        }
+
+        function closeScenarioSimulator() {
+            document.getElementById('scenarioSimulatorModal').classList.add('hidden');
+        }
+
+        function runSimulation() {
+            const data = financialData[currentMonth];
+            const chargeInc = parseFloat(document.getElementById('simCharge').value) || 0;
+            const opdInc = parseFloat(document.getElementById('simOpd').value) || 0;
+            const machAdd = parseInt(document.getElementById('simMach').value) || 0;
+            const denialRed = parseFloat(document.getElementById('simDenial').value) || 0;
+            const arRed = parseFloat(document.getElementById('simAr').value) || 0;
+            const enable4thShift = parseInt(document.getElementById('sim4thShift').value) || 0;
+
+            document.getElementById('valCharge').textContent = `${chargeInc}%`;
+            document.getElementById('valOpd').textContent = `+${opdInc}%`;
+            document.getElementById('valMach').textContent = `+${machAdd} Units`;
+            document.getElementById('valDenial').textContent = `-${denialRed}%`;
+            document.getElementById('valAr').textContent = `-${arRed} Days`;
+
+            const baseRev = data.grossRevenue;
+            const baseIncome = data.netIncome;
+
+            let revMult = 1 + (chargeInc * 0.012) + (opdInc * 0.008) + (machAdd * 0.025) + (enable4thShift * 0.14) + (denialRed * 0.015);
+            let newRev = Math.round(baseRev * revMult);
+            let newIncome = Math.round(baseIncome + (newRev - baseRev) * 0.55 + (arRed * 25000));
+            let newEbitda = ((newIncome / newRev) * 100).toFixed(1);
+
+            document.getElementById('simBaseRev').textContent = formatINR(baseRev);
+            document.getElementById('simNewRev').textContent = formatINR(newRev);
+
+            document.getElementById('simBaseIncome').textContent = formatINR(baseIncome);
+            document.getElementById('simNewIncome').textContent = formatINR(newIncome);
+
+            document.getElementById('simBaseEbitda').textContent = `${data.ebitdaMargin}%`;
+            document.getElementById('simNewEbitda').textContent = `${newEbitda}%`;
+
+            let payback = (14.2 - (machAdd * 0.8) - (enable4thShift * 2.1)).toFixed(1);
+            document.getElementById('simPayback').textContent = `${payback} Months`;
+
+            document.getElementById('simAiInsight').textContent = `Simulating for ${currentMonth} 2026: Strategy yield adds ${formatINR(newRev - baseRev)} gross revenue and ${formatINR(newIncome - baseIncome)} net profit monthly.`;
+        }
+
+        // -------------------------------------------------------------
+        // 10. CHARTS & BENCHMARKS
+        // -------------------------------------------------------------
+        function initCharts() {
+            const ctxRev = document.getElementById('revenueSourcesChart').getContext('2d');
+            revenueChart = new Chart(ctxRev, {
+                type: 'bar',
+                data: {
+                    labels: ['Outpatient Dialysis', 'Inpatient Nephro', 'Kidney Transplant', 'Vascular Access', 'Lab & Diagnostics'],
+                    datasets: [{ data: [0, 0, 0, 0, 0], backgroundColor: ['#0d9488', '#0284c7', '#2563eb', '#38bdf8', '#64748b'], borderRadius: 6 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    onClick: (e, elements) => { if (elements.length > 0) openRevenueCategoryModal(revenueChart.data.labels[elements[0].index]); },
+                    plugins: { legend: { display: false } },
+                    scales: { y: { ticks: { callback: v => '₹' + (v / 100000) + ' L' } }, x: { grid: { display: false } } }
+                }
+            });
+
+            const ctxCost = document.getElementById('costControlChart').getContext('2d');
+            costChart = new Chart(ctxCost, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Clinical Salaries', 'Dialysis Consumables', 'Pharma & Supplies', 'Utilities & Power', 'Admin & Depr.'],
+                    datasets: [{ data: [0, 0, 0, 0, 0], backgroundColor: ['#0f766e', '#0284c7', '#f59e0b', '#64748b', '#cbd5e1'] }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    onClick: (e, elements) => { if (elements.length > 0) openCostCategoryModal(costChart.data.labels[elements[0].index]); },
+                    plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } }, cutout: '65%'
+                }
+            });
+
+            const ctxPayer = document.getElementById('payerMixChart').getContext('2d');
+            payerChart = new Chart(ctxPayer, {
+                type: 'bar',
+                data: {
+                    labels: ['Private Insurance', 'PM-JAY', 'CGHS', 'ECHS', 'Cash / Self-Pay'],
+                    datasets: [{ data: [0, 0, 0, 0, 0], backgroundColor: ['#0d9488', '#0284c7', '#3b82f6', '#8b5cf6', '#94a3b8'], borderRadius: 6 }]
+                },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+
+            const ctxBudget = document.getElementById('budgetVarianceChart').getContext('2d');
+            budgetChart = new Chart(ctxBudget, {
+                type: 'bar',
+                data: {
+                    labels: ['Dialysis Unit', 'Transplant Surg', 'ICU / Inpatient', 'Outpatient Clinics', 'Lab & Pharmacy'],
+                    datasets: [{ label: 'Budget', data: [0,0,0,0,0], backgroundColor: '#94a3b8' }, { label: 'Actual', data: [0,0,0,0,0], backgroundColor: '#0284c7' }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    onClick: (e, elements) => { if (elements.length > 0) openDepartmentBudgetModal(budgetChart.data.labels[elements[0].index]); },
+                    plugins: { legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } } }
+                }
+            });
+        }
+
+        function initForecastChart() {
+            const ctxForecast = document.getElementById('forecastChart').getContext('2d');
+            forecastChart = new Chart(ctxForecast, {
+                type: 'line',
+                data: {
+                    labels: ['Jan 2027', 'Feb 2027', 'Mar 2027'],
+                    datasets: [
+                        { label: 'Predicted Revenue (₹ Cr)', data: [3.58, 3.65, 3.82], borderColor: '#0d9488', backgroundColor: 'rgba(13, 148, 136, 0.1)', fill: true, tension: 0.3 },
+                        { label: 'Predicted Net Profit (₹ Lakh)', data: [78.2, 81.0, 86.5], borderColor: '#4f46e5', backgroundColor: 'transparent', borderDash: [5, 5], tension: 0.3 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } } },
+                    scales: { y: { grid: { color: 'rgba(148, 163, 184, 0.1)' } }, x: { grid: { display: false } } }
+                }
+            });
+        }
+
+        function updateRevenueChart(rev) { revenueChart.data.datasets[0].data = [rev.outpatientDialysis, rev.inpatientNephrology, rev.kidneyTransplant, rev.vascularAccessSurgery, rev.labDiagnostics]; revenueChart.update(); }
+        function updateCostChart(exp) { costChart.data.datasets[0].data = [exp.clinicalSalaries, exp.dialysisConsumables, exp.pharmaceuticals, exp.facilityUtilities, exp.adminDepreciation]; costChart.update(); }
+        function updatePayerChart(payer) { payerChart.data.datasets[0].data = [payer.privateInsurance, payer.pmjay, payer.cghs, payer.echs, payer.cash]; payerChart.update(); }
+        function updateBudgetChart(b) {
+            const keys = ['dialysisUnit', 'transplantSurg', 'icuInpatient', 'outpatientClinics', 'labPharmacy'];
+            budgetChart.data.datasets[0].data = keys.map(k => b[k].budget);
+            budgetChart.data.datasets[1].data = keys.map(k => b[k].actual);
+            budgetChart.update();
+        }
+
+        // -------------------------------------------------------------
+        // 11. RENDER AUXILIARY ENTERPRISE PANELS
+        // -------------------------------------------------------------
+        function renderCapexTable() {
+            const tbody = document.getElementById('capexTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = capexData.map(item => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition cursor-pointer" onclick="openCapitalAssetsPage()">
+                    <td class="py-3 px-4 font-semibold text-slate-800 dark:text-slate-200">${item.name}</td>
+                    <td class="py-3 px-4 text-slate-500 dark:text-slate-400">${item.category}</td>
+                    <td class="py-3 px-4 text-right font-medium">${formatINR(item.budgeted)}</td>
+                    <td class="py-3 px-4 text-right font-medium text-slate-900 dark:text-white">${formatINR(item.spent)}</td>
+                    <td class="py-3 px-4 w-36"><div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-1.5"><div class="bg-teal-600 h-1.5 rounded-full" style="width: ${item.progress}%"></div></div></td>
+                    <td class="py-3 px-4 text-center font-bold text-teal-700 dark:text-teal-400">${item.roi}</td>
+                    <td class="py-3 px-4 text-center"><span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300">${item.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderBenchmarks() {
+            const data = financialData[currentMonth];
+            const benchmarks = [
+                { metric: "Claim Denial Rate (%)", apex: `${data.denialRate}%`, avg: "6.2%", best: "2.8%", var: `${(data.denialRate - 6.2).toFixed(1)}%`, status: data.denialRate <= 4.5 ? "Optimal" : "Attention", color: data.denialRate <= 4.5 ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800" },
+                { metric: "Days in Accounts Receivable (AR)", apex: `${data.daysInAR} Days`, avg: "45 Days", best: "28 Days", var: `${data.daysInAR - 45} Days`, status: "Optimal", color: "bg-emerald-100 text-emerald-800" },
+                { metric: "EBITDA Margin (%)", apex: `${data.ebitdaMargin}%`, avg: "21.0%", best: "28.5%", var: `+${(data.ebitdaMargin - 21.0).toFixed(1)}%`, status: "Optimal", color: "bg-emerald-100 text-emerald-800" },
+                { metric: "Hemodialysis Chair Occupancy", apex: `${data.chairUtilization}%`, avg: "78.0%", best: "94.0%", var: `+${(data.chairUtilization - 78).toFixed(1)}%`, status: "Top Tier", color: "bg-emerald-100 text-emerald-800" },
+                { metric: "RO Water Recovery Efficiency", apex: data.roPlant.efficiency, avg: "92.0%", best: "98.5%", var: "+5.4%", status: "Optimal", color: "bg-emerald-100 text-emerald-800" }
+            ];
+
+            const tbody = document.getElementById('benchmarkTableBody');
+            if (tbody) {
+                tbody.innerHTML = benchmarks.map(b => `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="py-2.5 px-3 font-semibold text-slate-800 dark:text-slate-200">${b.metric}</td>
+                        <td class="py-2.5 px-3 text-right font-bold text-teal-700 dark:text-teal-400">${b.apex}</td>
+                        <td class="py-2.5 px-3 text-right text-slate-500">${b.avg}</td>
+                        <td class="py-2.5 px-3 text-right font-semibold text-slate-800 dark:text-slate-300">${b.best}</td>
+                        <td class="py-2.5 px-3 text-center text-emerald-600 font-bold">${b.var}</td>
+                        <td class="py-2.5 px-3 text-center"><span class="px-2 py-0.5 text-[9px] font-bold rounded ${b.color}">${b.status}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function renderTimelineGrid() {
+            const list = document.getElementById('timelineList');
+            if (!list) return;
+            const data = financialData[currentMonth];
+            list.innerHTML = `
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <span class="text-[10px] font-black text-teal-700 dark:text-teal-400 block uppercase">${currentMonth} 2026 Milestone</span>
+                    <h4 class="font-bold text-slate-800 dark:text-slate-200 mt-0.5">${data.briefing.points[0]}</h4>
+                    <p class="text-[11px] text-slate-500 mt-1">${data.briefing.points[1] || ''}</p>
+                </div>
+            `;
+        }
+
+        function renderLeakageHeatmap() {
+            const data = financialData[currentMonth];
+            const leakages = [
+                { cat: "Billing Errors", impact: formatINR(data.risk.revenueLeakage * 0.3), risk: "Low Risk", action: "Front-desk audit", bg: "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800" },
+                { cat: "Coding Mismatch", impact: formatINR(data.risk.revenueLeakage * 0.35), risk: "Medium Risk", action: "AI ICD-11 coding", bg: "bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800" },
+                { cat: "Claim Denials", impact: formatINR(data.risk.revenueLeakage * 0.2), risk: "High Risk", action: "Pre-auth automation", bg: "bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800" },
+                { cat: "Pharmacy Unbilled", impact: formatINR(data.risk.revenueLeakage * 0.15), risk: "Low Risk", action: "Barcode scanning", bg: "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800" }
+            ];
+
+            const grid = document.getElementById('leakageGrid');
+            if (grid) {
+                grid.innerHTML = leakages.map(l => `
+                    <div class="p-3 rounded-xl border ${l.bg}">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-slate-800 dark:text-slate-200">${l.cat}</span>
+                            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${l.risk==='High Risk'?'bg-rose-200 text-rose-800':'bg-amber-200 text-amber-800'}">${l.risk}</span>
+                        </div>
+                        <span class="text-base font-black text-slate-900 dark:text-white block">${l.impact}</span>
+                        <span class="text-[10px] text-slate-600 dark:text-slate-400 mt-1 block"><strong>Action:</strong> ${l.action}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderNabhProgress() {
+            const data = financialData[currentMonth];
+            const compScore = document.getElementById('nabhCompScore');
+            const compBar = document.getElementById('nabhCompBar');
+            const roScore = document.getElementById('roEffScore');
+            const roBar = document.getElementById('roEffBar');
+
+            if (compScore) compScore.textContent = `${data.risk.complianceScore}%`;
+            if (compBar) compBar.style.width = `${data.risk.complianceScore}%`;
+            if (roScore) roScore.textContent = data.roPlant.efficiency;
+            if (roBar) roBar.style.width = data.roPlant.efficiency;
+        }
+
+        function renderEsgMetrics() {
+            const grid = document.getElementById('esgMetricsGrid');
+            if (!grid) return;
+            grid.innerHTML = `
+                <div class="p-2 bg-slate-50 dark:bg-slate-800/50 rounded"><span class="text-slate-500 block">Biomedical Waste:</span><span class="font-bold text-slate-800 dark:text-slate-200">100% Segregated</span></div>
+                <div class="p-2 bg-slate-50 dark:bg-slate-800/50 rounded"><span class="text-slate-500 block">Solar Hybrid Energy:</span><span class="font-bold text-emerald-700 dark:text-emerald-400">18.4% Off-Grid</span></div>
+            `;
+        }
+
+        function renderDecisionRegister() {
+            const data = financialData[currentMonth];
+            const decisions = [
+                { title: "Approve 4th Evening Dialysis Shift", owner: "Medical Director", impact: "+₹18 Lakh/yr", pct: 85, status: "Active Trial" },
+                { title: "Automate PM-JAY Pre-Authorization Clearinghouse", owner: "RCM Head", impact: "-₹14 Lakh Loss", pct: 100, status: "Completed" },
+                { title: "Bulk Procurement Contract for High-Flux Dialyzers", owner: "Procurement", impact: "+₹12 Lakh Margin", pct: 60, status: "In Negotiation" }
+            ];
+
+            const tbody = document.getElementById('decisionRegisterBody');
+            if (tbody) {
+                tbody.innerHTML = decisions.map(d => `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                        <td class="py-2.5 px-3 font-bold text-slate-800 dark:text-slate-200">${d.title}</td>
+                        <td class="py-2.5 px-3 text-slate-500 dark:text-slate-400">${d.owner}</td>
+                        <td class="py-2.5 px-3 text-right font-extrabold text-emerald-700 dark:text-emerald-400">${d.impact}</td>
+                        <td class="py-2.5 px-3 w-32">
+                            <div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-1.5"><div class="bg-indigo-600 h-1.5 rounded-full" style="width: ${d.pct}%"></div></div>
+                        </td>
+                        <td class="py-2.5 px-3 text-center"><span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300">${d.status}</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function setModalBreadcrumb(pathText) {
+            document.getElementById('modalBreadcrumb').innerHTML = pathText.split(' > ').map((p, i, arr) => `
+                <span class="${i === arr.length - 1 ? 'font-bold text-white' : 'text-slate-400'}">${p}</span>
+                ${i < arr.length - 1 ? '<i data-lucide="chevron-right" class="w-3 h-3 text-slate-500 inline mx-0.5"></i>' : ''}
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // -------------------------------------------------------------
+        // 12. DRILLDOWN MODAL HANDLERS
+        // -------------------------------------------------------------
+        function openMachineConsoleModal() {
+            showLoading("Fetching Dialysis Machine Telemetry...");
+            setTimeout(() => {
+                hideLoading();
+                setModalBreadcrumb(`Dashboard > Bio-Medical Equipment > Dialysis Machine Console > ${currentMonth} 2026`);
+                const data = financialData[currentMonth];
+                const modal = document.getElementById('drilldownModal');
+                document.getElementById('modalTitle').textContent = `Dialysis Machine Management Console (${currentMonth} 2026)`;
+                document.getElementById('modalSubtitle').textContent = "Hemodialysis Fleet Diagnostics, AMC, Maintenance & AI Asset Utilization";
+                
+                let fleetRows = machineFleet.map(m => `
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <td class="py-2 px-3 font-bold">${m.id}</td>
+                        <td class="py-2 px-3">${m.vendor}</td>
+                        <td class="py-2 px-3"><span class="px-2 py-0.5 text-[10px] font-bold rounded-full ${m.status==='Running'?'bg-emerald-100 text-emerald-800':'bg-amber-100 text-amber-800'}">${m.status}</span></td>
+                        <td class="py-2 px-3 font-semibold">${m.sessions}</td>
+                        <td class="py-2 px-3 text-right font-bold text-teal-700 dark:text-teal-400">${m.rev}</td>
+                        <td class="py-2 px-3 text-center">${m.util}</td>
+                        <td class="py-2 px-3 text-slate-500">${m.pmDue}</td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('modalBodyContent').innerHTML = `
+                    <div class="grid grid-cols-4 gap-3 mb-4 text-center text-xs">
+                        <div class="p-2.5 bg-teal-50 dark:bg-teal-950/40 rounded"><span class="text-slate-500 block">Machines Online</span><span class="text-base font-extrabold text-teal-800 dark:text-teal-300">${data.machines.running} / ${data.machines.installed}</span></div>
+                        <div class="p-2.5 bg-cyan-50 dark:bg-cyan-950/40 rounded"><span class="text-slate-500 block">Fleet Utilization</span><span class="text-base font-extrabold text-cyan-800 dark:text-cyan-300">${data.machines.utilization}%</span></div>
+                        <div class="p-2.5 bg-amber-50 dark:bg-amber-950/40 rounded"><span class="text-slate-500 block">Sessions Today</span><span class="text-base font-extrabold text-amber-800 dark:text-amber-300">${data.machines.sessionsToday}</span></div>
+                        <div class="p-2.5 bg-slate-50 dark:bg-slate-800/40 rounded"><span class="text-slate-500 block">Avg Downtime</span><span class="text-base font-extrabold text-slate-800 dark:text-slate-200">${data.machines.avgDowntime} hrs</span></div>
+                    </div>
+                    <div class="overflow-x-auto border rounded text-xs mb-3"><table class="w-full text-left"><thead class="bg-slate-50 dark:bg-slate-800 font-semibold"><tr><th class="p-2">ID</th><th class="p-2">Model</th><th class="p-2">Status</th><th class="p-2">Sessions</th><th class="p-2 text-right">Rev</th><th class="p-2 text-center">Util</th><th class="p-2">PM Due</th></tr></thead><tbody class="divide-y divide-slate-100 dark:divide-slate-800">${fleetRows}</tbody></table></div>
+                `;
+                modal.classList.remove('hidden');
+            }, 300);
+        }
+
+        function openFinancialRiskCommandCenter() {
+            showLoading("Fetching Risk Ledger...");
+            setTimeout(() => {
+                hideLoading();
+                setModalBreadcrumb(`Dashboard > Risk Governance > Command Center > ${currentMonth} 2026`);
+                const data = financialData[currentMonth];
+                const modal = document.getElementById('drilldownModal');
+                document.getElementById('modalTitle').textContent = `Financial Risk Command Center (${currentMonth} 2026)`;
+                document.getElementById('modalSubtitle').textContent = "Provisions, Appeals, Bad Debts & Audit Compliance";
+                document.getElementById('modalBodyContent').innerHTML = `
+                    <div class="grid grid-cols-3 gap-3 mb-4 text-center text-xs">
+                        <div class="p-3 bg-rose-50 dark:bg-rose-950/40 rounded border border-rose-100 dark:border-rose-900"><span class="text-rose-700 dark:text-rose-300 block">Compliance Score</span><span class="text-xl font-extrabold text-rose-900 dark:text-rose-200">${data.risk.complianceScore} / 100</span></div>
+                        <div class="p-3 bg-amber-50 dark:bg-amber-950/40 rounded border border-amber-100 dark:border-amber-900"><span class="text-amber-700 dark:text-amber-300 block">Active Appeals</span><span class="text-xl font-extrabold text-amber-900 dark:text-amber-200">${data.risk.appeals} Cases</span></div>
+                        <div class="p-3 bg-slate-50 dark:bg-slate-800/40 rounded border border-slate-200 dark:border-slate-700"><span class="text-slate-500 block">Outstanding AR</span><span class="text-xl font-extrabold text-slate-900 dark:text-white">${formatINR(data.risk.arOutstanding)}</span></div>
+                    </div>
+                    <div class="p-3 bg-slate-50 dark:bg-slate-800/40 rounded border text-xs space-y-1">
+                        <div class="flex justify-between"><span>Pending Refunds:</span><span class="font-bold">${formatINR(data.risk.refunds)}</span></div>
+                        <div class="flex justify-between"><span>Legal Settlement Reserve:</span><span class="font-bold">${formatINR(data.risk.legalProvision)}</span></div>
+                        <div class="flex justify-between"><span>Bad Debt Write-off Provision:</span><span class="font-bold text-rose-600">${formatINR(data.risk.badDebt)}</span></div>
+                    </div>
+                `;
+                modal.classList.remove('hidden');
+            }, 300);
+        }
+
+        function openRoPlantDashboard() {
+            showLoading("Fetching RO Plant Telemetry...");
+            setTimeout(() => {
+                hideLoading();
+                setModalBreadcrumb(`Dashboard > Facilities > RO Water Plant > ${currentMonth} 2026`);
+                const data = financialData[currentMonth];
+                const modal = document.getElementById('drilldownModal');
+                document.getElementById('modalTitle').textContent = `RO Water Purification Plant Dashboard (${currentMonth} 2026)`;
+                document.getElementById('modalSubtitle').textContent = "Dialysis Water Quality & Membrane Efficiency";
+                document.getElementById('modalBodyContent').innerHTML = `
+                    <div class="grid grid-cols-3 gap-3 text-center text-xs">
+                        <div class="p-3 bg-blue-50 dark:bg-blue-950/40 rounded"><span class="text-slate-500 block">Purification Efficiency</span><span class="text-lg font-bold text-blue-900 dark:text-blue-300">${data.roPlant.efficiency}</span></div>
+                        <div class="p-3 bg-emerald-50 dark:bg-emerald-950/40 rounded"><span class="text-slate-500 block">Endotoxin Audit</span><span class="text-xs font-bold text-emerald-900 dark:text-emerald-300">&lt; 0.003 EU/ml</span></div>
+                        <div class="p-3 bg-cyan-50 dark:bg-cyan-950/40 rounded"><span class="text-slate-500 block">Daily Consumption</span><span class="text-xs font-bold text-cyan-900 dark:text-cyan-300">${data.roPlant.dailyWater}</span></div>
+                    </div>
+                `;
+                modal.classList.remove('hidden');
+            }, 300);
+        }
+
+        function openRevenueCategoryModal(cat) {
+            setModalBreadcrumb(`Dashboard > Revenue > ${cat} > ${currentMonth} 2026`);
+            const data = financialData[currentMonth];
+            const modal = document.getElementById('drilldownModal');
+            document.getElementById('modalTitle').textContent = `${cat} Revenue Line Drilldown (${currentMonth} 2026)`;
+            document.getElementById('modalSubtitle').textContent = "Patient Volumes & Billing Averages";
+            document.getElementById('modalBodyContent').innerHTML = `<div class="p-4 bg-teal-50 dark:bg-teal-950/40 text-teal-900 dark:text-teal-200 rounded font-bold text-xs">Monthly Revenue Contribution: ${formatINR(data.grossRevenue * 0.35)}</div>`;
+            modal.classList.remove('hidden');
+        }
+
+        function openCostCategoryModal(cat) {
+            setModalBreadcrumb(`Dashboard > Cost Structure > ${cat} > ${currentMonth} 2026`);
+            const modal = document.getElementById('drilldownModal');
+            document.getElementById('modalTitle').textContent = `${cat} Expense Breakdown (${currentMonth} 2026)`;
+            document.getElementById('modalSubtitle').textContent = "OPEX Ledger Control";
+            document.getElementById('modalBodyContent').innerHTML = `<div class="p-4 bg-slate-50 dark:bg-slate-800/40 rounded text-xs">Granular sub-ledger allocations configured for ${cat}.</div>`;
+            modal.classList.remove('hidden');
+        }
+
+        function openDepartmentBudgetModal(dept) {
+            setModalBreadcrumb(`Dashboard > Budget Variance > ${dept} > ${currentMonth} 2026`);
+            const modal = document.getElementById('drilldownModal');
+            document.getElementById('modalTitle').textContent = `${dept} Department Budget Dashboard (${currentMonth} 2026)`;
+            document.getElementById('modalSubtitle').textContent = "Variance & Forecast Control";
+            document.getElementById('modalBodyContent').innerHTML = `<div class="p-4 bg-slate-50 dark:bg-slate-800/40 rounded text-xs">Department ${dept} operating within allowable variance limits.</div>`;
+            modal.classList.remove('hidden');
+        }
+
+        function openCapitalAssetsPage() {
+            setModalBreadcrumb(`Dashboard > Capital Assets Registry`);
+            const modal = document.getElementById('drilldownModal');
+            document.getElementById('modalTitle').textContent = `Fixed Capital Assets Registry`;
+            document.getElementById('modalSubtitle').textContent = "Valuation & ROI Tracking";
+            document.getElementById('modalBodyContent').innerHTML = `<div class="p-4 bg-slate-50 dark:bg-slate-800/40 rounded text-xs">Capital Asset Registry loaded with ${capexData.length} active equipment deployments.</div>`;
+            modal.classList.remove('hidden');
+        }
+
+        function openIncidentModal(alert) {
+            setModalBreadcrumb(`Dashboard > Executive Alerts > Log ${alert.id}`);
+            const modal = document.getElementById('drilldownModal');
+            document.getElementById('modalTitle').textContent = `Incident Log: ${alert.title}`;
+            document.getElementById('modalSubtitle').textContent = `Incident Ref: ${alert.id || 'INC-2026'}`;
+            document.getElementById('modalBodyContent').innerHTML = `
+                <div class="space-y-2 text-xs">
+                    <p class="p-2 bg-amber-50 dark:bg-amber-950/40 rounded border border-amber-200 dark:border-amber-800"><strong>Root Cause:</strong> ${alert.rootCause || "Operational Delay"}</p>
+                    <p class="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded border border-emerald-200 dark:border-emerald-800"><strong>Action:</strong> ${alert.resolution || "Corrective protocols active"}</p>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+        }
+
+        function openAiAdvisorReport() {
+            setModalBreadcrumb(`Dashboard > AI Predictive Advisor > ${currentMonth} 2026`);
+            const data = financialData[currentMonth];
+            const modal = document.getElementById('drilldownModal');
+            document.getElementById('modalTitle').textContent = `AI Financial Advisor Executive Report (${currentMonth} 2026)`;
+            document.getElementById('modalSubtitle').textContent = `Predictive Confidence: ${data.aiAdvisor.confidence}%`;
+            document.getElementById('modalBodyContent').innerHTML = `
+                <div class="p-4 bg-indigo-900 text-white rounded-xl text-xs space-y-2">
+                    <span class="font-bold text-indigo-300 block uppercase">Strategic Recommendation</span>
+                    <p class="text-sm font-medium">${data.aiAdvisor.rec}</p>
+                    <span class="text-emerald-400 font-bold block pt-2">Expected Impact: ${data.aiAdvisor.impact}</span>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+        }
+
+        function openHealthScoreConsole() {
+            setModalBreadcrumb(`Dashboard > Health Index Model > ${currentMonth} 2026`);
+            const data = financialData[currentMonth];
+            const modal = document.getElementById('drilldownModal');
+            document.getElementById('modalTitle').textContent = `Financial Health Index Breakdown (${currentMonth} 2026)`;
+            document.getElementById('modalSubtitle').textContent = `Score: ${data.healthScore} / 100`;
+            document.getElementById('modalBodyContent').innerHTML = `
+                <div class="p-3 bg-slate-50 dark:bg-slate-800/40 rounded text-xs space-y-1">
+                    <div class="flex justify-between"><span>EBITDA Margin:</span><span class="font-bold">${data.ebitdaMargin}%</span></div>
+                    <div class="flex justify-between"><span>Days Cash on Hand:</span><span class="font-bold">${data.daysCashOnHand} Days</span></div>
+                    <div class="flex justify-between"><span>Days in AR:</span><span class="font-bold">${data.daysInAR} Days</span></div>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+        }
+
+        function openDrilldownModal(type) {
+            if (type === 'grossRev') openRevenueCategoryModal('Outpatient Dialysis');
+            else if (type === 'denial') openFinancialRiskCommandCenter();
+            else openHealthScoreConsole();
+        }
+
+        function closeDrilldownModal() { document.getElementById('drilldownModal').classList.add('hidden'); }
+
+        // -------------------------------------------------------------
+        // 13. BOARD MEETING MODE & BRIEFING
+        // -------------------------------------------------------------
+        function openBoardMeetingMode() {
+            showLoading("Compiling Board Presentation Briefing Pack...");
+            setTimeout(() => {
+                hideLoading();
+                const data = financialData[currentMonth];
+                const prevMonthIndex = months.indexOf(currentMonth) - 1;
+                const prevData = prevMonthIndex >= 0 ? financialData[months[prevMonthIndex]] : data;
+
+                document.getElementById('boardModalSubtitle').textContent = `KidneyCare Hospital Board Executive Briefing - ${currentMonth} 2026`;
+                document.getElementById('boardExecSummaryText').textContent = data.briefing.points.join(' ');
+
+                document.getElementById('boardTopKpisGrid').innerHTML = `
+                    <div class="p-3 bg-slate-900 rounded border border-slate-800 text-center"><span class="text-[10px] text-slate-400 block">Gross Revenue</span><span class="text-sm font-bold text-emerald-400">${formatINR(data.grossRevenue)}</span></div>
+                    <div class="p-3 bg-slate-900 rounded border border-slate-800 text-center"><span class="text-[10px] text-slate-400 block">Net Profit</span><span class="text-sm font-bold text-teal-400">${formatINR(data.netIncome)}</span></div>
+                    <div class="p-3 bg-slate-900 rounded border border-slate-800 text-center"><span class="text-[10px] text-slate-400 block">Health Score</span><span class="text-sm font-bold text-amber-400">${data.healthScore}/100</span></div>
+                    <div class="p-3 bg-slate-900 rounded border border-slate-800 text-center"><span class="text-[10px] text-slate-400 block">Denial Rate</span><span class="text-sm font-bold text-rose-400">${data.denialRate}%</span></div>
+                    <div class="p-3 bg-slate-900 rounded border border-slate-800 text-center"><span class="text-[10px] text-slate-400 block">Machine Util</span><span class="text-sm font-bold text-cyan-400">${data.machines.utilization}%</span></div>
+                `;
+
+                document.getElementById('boardRisksList').innerHTML = `
+                    <li>• Outstanding AR at ${formatINR(data.risk.arOutstanding)} across TPA channels.</li>
+                    <li>• Active insurance rejection appeals count sitting at ${data.risk.appeals} cases.</li>
+                    <li>• Unbilled revenue leakage estimated at ${formatINR(data.risk.revenueLeakage)}.</li>
+                `;
+
+                document.getElementById('boardAiRecsList').innerHTML = `
+                    <li>• ${data.aiAdvisor.rec}</li>
+                    <li>• Projected yield: ${data.aiAdvisor.impact}.</li>
+                    <li>• Predictive confidence index: ${data.aiAdvisor.confidence}%.</li>
+                `;
+
+                const revGrowth = ((data.grossRevenue - prevData.grossRevenue) / prevData.grossRevenue * 100).toFixed(1);
+                document.getElementById('boardWhatChangedGrid').innerHTML = `
+                    <div class="p-2 bg-slate-950 rounded border border-slate-800"><span class="text-slate-400 block text-[10px]">Revenue Growth</span><span class="font-bold text-emerald-400">${revGrowth}% MoM</span></div>
+                    <div class="p-2 bg-slate-950 rounded border border-slate-800"><span class="text-slate-400 block text-[10px]">Denial Rate</span><span class="font-bold text-teal-400">${data.denialRate}%</span></div>
+                    <div class="p-2 bg-slate-950 rounded border border-slate-800"><span class="text-slate-400 block text-[10px]">Machine Load</span><span class="font-bold text-cyan-400">${data.machines.utilization}%</span></div>
+                    <div class="p-2 bg-slate-950 rounded border border-slate-800"><span class="text-slate-400 block text-[10px]">Cash Reserve</span><span class="font-bold text-amber-400">${data.daysCashOnHand} Days</span></div>
+                `;
+
+                document.getElementById('boardMeetingModal').classList.remove('hidden');
+            }, 300);
+        }
+
+        function closeBoardMeetingMode() { document.getElementById('boardMeetingModal').classList.add('hidden'); }
+
+        function openExecutiveBriefing() {
+            showLoading("Compiling Monthly Executive Narrative...");
+            setTimeout(() => {
+                hideLoading();
+                const data = financialData[currentMonth];
+                document.getElementById('briefingMonthSubtitle').textContent = `${currentMonth} 2026 Executive Briefing`;
+                document.getElementById('briefingActionItem').textContent = data.briefing.action;
+                const container = document.getElementById('briefingNarrative');
+                container.innerHTML = data.briefing.points.map(pt => `<p class="flex items-start"><span class="w-1.5 h-1.5 rounded-full bg-indigo-600 mt-1.5 mr-2"></span><span>${pt}</span></p>`).join('');
+                document.getElementById('executiveBriefingModal').classList.remove('hidden');
+            }, 300);
+        }
+
+        function closeExecutiveBriefing() { document.getElementById('executiveBriefingModal').classList.add('hidden'); }
+
+        // -------------------------------------------------------------
+        // 14. PRESENTATION AUTO-PLAY MODE
+        // -------------------------------------------------------------
+        function togglePresentationMode() {
+            const btn = document.getElementById('presentationBtn');
+            if (presentationInterval) {
+                clearInterval(presentationInterval);
+                presentationInterval = null;
+                btn.classList.replace('bg-rose-600', 'bg-cyan-600');
+                alert("Presentation Mode Stopped.");
+                return;
+            }
+
+            btn.classList.replace('bg-cyan-600', 'bg-rose-600');
+            alert("Presentation Mode Active. Automatically navigating through dashboard sections every 8 seconds.");
+
+            const sections = ['sec-operations', 'sec-scorecard', 'sec-overview', 'sec-kpis', 'sec-machines', 'sec-risks', 'sec-benchmarks', 'sec-revenue', 'sec-forecast', 'sec-timeline'];
+            let idx = 0;
+
+            presentationInterval = setInterval(() => {
+                const target = document.getElementById(sections[idx]);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                idx = (idx + 1) % sections.length;
+            }, 8000);
+        }
+
+        // -------------------------------------------------------------
+        // 15. AI CHATBOT
+        // -------------------------------------------------------------
+        function toggleAiChat() { document.getElementById('aiChatWindow').classList.toggle('hidden'); }
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const query = input.value.trim();
+            if (!query) return;
+
+            const chatBox = document.getElementById('chatMessages');
+            chatBox.innerHTML += `<div class="p-2 bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg text-right font-medium">${query}</div>`;
+            input.value = '';
+
+            const data = financialData[currentMonth];
+            let reply = `In ${currentMonth} 2026, Gross Revenue reached ${formatINR(data.grossRevenue)} with a Financial Health Score of ${data.healthScore}/100 and machine utilization at ${data.machines.utilization}%.`;
+
+            if (query.toLowerCase().includes('revenue')) reply = `Gross Revenue for ${currentMonth} is ${formatINR(data.grossRevenue)}, driven primarily by Outpatient Dialysis (${formatINR(data.revenueSources.outpatientDialysis)}).`;
+            else if (query.toLowerCase().includes('denial') || query.toLowerCase().includes('claim')) reply = `Claims Denial Rate sits at ${data.denialRate}% with ${data.risk.appeals} active TPA appeal cases.`;
+            else if (query.toLowerCase().includes('machine')) reply = `Dialysis fleet is running at ${data.machines.utilization}% load with ${data.machines.running} of ${data.machines.installed} machines actively deployed today.`;
+
+            setTimeout(() => {
+                chatBox.innerHTML += `<div class="p-2.5 bg-indigo-50 dark:bg-indigo-950/80 text-indigo-950 dark:text-indigo-200 border border-indigo-100 dark:border-indigo-900 rounded-lg leading-relaxed">${reply}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 400);
+        }
+
+        // -------------------------------------------------------------
+        // 16. SEARCH & NOTIFICATIONS & EXPORT
+        // -------------------------------------------------------------
+        function handleHisSearch(e) {
+            const q = e.target.value.toLowerCase().trim();
+            const dropdown = document.getElementById('searchResultsDropdown');
+            if (q.length < 2) { dropdown.classList.add('hidden'); return; }
+
+            const items = [
+                { name: "Machine HD-M01 Console", act: openMachineConsoleModal },
+                { name: "Patient Refund Register", act: openFinancialRiskCommandCenter },
+                { name: "RO Water Conductance Audit", act: openRoPlantDashboard },
+                { name: "Outpatient Dialysis Revenue", act: () => openRevenueCategoryModal("Outpatient Dialysis") }
+            ].filter(i => i.name.toLowerCase().includes(q));
+
+            if (items.length > 0) {
+                dropdown.innerHTML = items.map(i => `<div onclick="execSearch('${i.name}')" class="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer font-bold text-xs">${i.name}</div>`).join('');
+                dropdown.classList.remove('hidden');
+            } else dropdown.classList.add('hidden');
+        }
+
+        function execSearch(name) {
+            document.getElementById('searchResultsDropdown').classList.add('hidden');
+            if (name.includes("Machine")) openMachineConsoleModal();
+            else if (name.includes("Refund")) openFinancialRiskCommandCenter();
+            else openRoPlantDashboard();
+        }
+
+        function toggleNotificationPanel() { document.getElementById('notificationPanel').classList.toggle('hidden'); }
+        function renderNotifications() {
+            const list = document.getElementById('notifList');
+            if (!list) return;
+            list.innerHTML = notificationData.map(n => `
+                <div class="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                    <span class="font-bold block text-slate-800 dark:text-slate-200">${n.title}</span>
+                    <span class="text-[10px] text-slate-500">${n.desc}</span>
+                </div>
+            `).join('');
+        }
+
+        function exportReport(type) {
+            alert(`Generating ${type.toUpperCase()} Executive Report for ${currentMonth} 2026...\nReport file generated successfully.`);
+        }
+    </script>
+</body>
+</html>
